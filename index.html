@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>HANABI — цифровые впечатления</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #050306;
+    --ink: #f7eef0;
+    --muted: #b9a3ab;
+    --red: #ff2742;
+    --pink: #ff6f86;
+    --z-canvas: 1;
+    --z-overlay: 10;
+    --z-ui: 20;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Manrope", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  /* tall scroll runway — drives the whole scene */
+  #runway { height: 560vh; pointer-events: none; }
+
+  #scene {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-canvas);
+    display: block;
+  }
+  /* subtle vignette + grain over the canvas for depth */
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 42%, transparent 38%, rgba(0,0,0,0.55) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  /* ---- UI chrome ---- */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: var(--z-ui);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 26px clamp(20px, 5vw, 64px);
+    pointer-events: none;
+  }
+  .brand {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 14px 2px var(--red);
+  }
+  .nav-note {
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .progress {
+    position: fixed;
+    left: clamp(20px, 5vw, 64px);
+    bottom: 28px;
+    z-index: var(--z-ui);
+    width: clamp(120px, 22vw, 240px);
+    height: 2px;
+    background: rgba(255,255,255,0.12);
+    pointer-events: none;
+  }
+  .progress > i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--red), var(--pink));
+    box-shadow: 0 0 10px var(--red);
+  }
+
+  /* ---- narrative panels ---- */
+  .panel {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    display: flex;
+    padding: 0 clamp(22px, 7vw, 120px);
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+  .panel .inner { max-width: 620px; position: relative; }
+  /* soft dark scrim so copy stays legible over the particle field */
+  .panel .inner::before {
+    content: "";
+    position: absolute;
+    inset: -22% -28%;
+    z-index: -1;
+    background: radial-gradient(58% 60% at 50% 52%, rgba(5,3,6,0.82), rgba(5,3,6,0) 76%);
+    filter: blur(10px);
+    pointer-events: none;
+  }
+  .panel.left { align-items: center; justify-content: flex-start; }
+  .panel.right { align-items: center; justify-content: flex-end; text-align: right; }
+  .panel.right .inner { margin-left: auto; }
+  .panel.center { align-items: center; justify-content: center; text-align: center; }
+  .panel.center .inner { margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 22px;
+    font-weight: 600;
+  }
+  h1 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.6rem, 8.5vw, 5.4rem);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    text-shadow: 0 4px 60px rgba(0,0,0,0.7);
+  }
+  h2 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 5vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    text-shadow: 0 4px 50px rgba(0,0,0,0.7);
+  }
+  .lead {
+    margin-top: 24px;
+    font-size: clamp(1rem, 2.1vw, 1.22rem);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 46ch;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.85);
+  }
+  .panel.right .lead { margin-left: auto; }
+  .accent { color: var(--red); }
+
+  .caps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  .caps span {
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    padding: 9px 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 100px;
+    background: rgba(8,4,6,0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .cta {
+    pointer-events: auto;
+    margin-top: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: #150406;
+    background: var(--red);
+    padding: 16px 28px;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 0 0 0 rgba(255,39,66,0.5);
+    transition: box-shadow .5s cubic-bezier(.22,1,.36,1), transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  .cta:hover { transform: translateY(-2px); box-shadow: 0 14px 40px -8px rgba(255,39,66,0.8); }
+  .cta .arr { transition: transform .5s cubic-bezier(.22,1,.36,1); }
+  .cta:hover .arr { transform: translateX(4px); }
+
+  .scrollhint {
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    z-index: var(--z-ui);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .scrollhint .line {
+    width: 1px; height: 38px;
+    background: linear-gradient(var(--pink), transparent);
+    animation: drop 1.8s infinite cubic-bezier(.65,0,.35,1);
+  }
+  @keyframes drop {
+    0% { transform: scaleY(0); transform-origin: top; }
+    40% { transform: scaleY(1); transform-origin: top; }
+    60% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  .noscript-msg, .loader {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--muted);
+    font-size: 14px; letter-spacing: 0.04em;
+    transition: opacity .8s ease;
+  }
+  .loader.hidden { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 640px) {
+    .panel.right { text-align: left; justify-content: flex-start; }
+    .panel.right .inner, .panel.right .lead { margin-left: 0; }
+    .nav-note { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scrollhint .line { animation: none; }
+  }
+
+  /* ---- top bar right side + language switcher ---- */
+  .topright { display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); }
+  .brand { color: var(--ink); text-decoration: none; pointer-events: auto; }
+  .brand .sub { color: var(--muted); font-weight: 400; font-size: 13px; letter-spacing: 0.04em; }
+  .langsw {
+    display: flex; gap: 2px; pointer-events: auto;
+    background: rgba(12,7,9,0.5);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px; padding: 3px;
+    backdrop-filter: blur(6px);
+  }
+  .langsw button {
+    font-family: "Manrope", sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); background: none; border: 0;
+    padding: 6px 11px; border-radius: 100px; cursor: pointer;
+    transition: color .25s, background .25s;
+  }
+  .langsw button:hover { color: var(--ink); }
+  .langsw button.active { color: #150406; background: var(--ink); }
+
+  /* ---- content sections after the 3D experience ---- */
+  #site { position: relative; z-index: 5; }
+  .handoff { height: 55vh; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; }
+  .sect { background: var(--bg); }
+  .sect .wrap { max-width: 1180px; margin: 0 auto; padding: clamp(72px,11vh,150px) clamp(22px,7vw,96px); }
+  .sect h2 { text-shadow: none; }
+  .sect-head { max-width: 20ch; margin-bottom: clamp(36px,6vh,72px); }
+
+  .rows { border-bottom: 1px solid rgba(255,255,255,0.10); }
+  .row {
+    display: grid; grid-template-columns: minmax(0,0.9fr) minmax(0,1.3fr);
+    gap: clamp(14px,4vw,72px); padding: clamp(28px,4vh,46px) 0;
+    border-top: 1px solid rgba(255,255,255,0.10); align-items: baseline;
+  }
+  .row h3 {
+    font-family: "Unbounded", sans-serif; font-weight: 600;
+    font-size: clamp(1.35rem,2.6vw,2rem); letter-spacing: -0.02em; line-height: 1.05;
+  }
+  .row p { color: #cdbcc2; font-size: clamp(1rem,1.5vw,1.12rem); line-height: 1.6; max-width: 54ch; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: clamp(22px,3vw,40px); }
+  .step .num { font-family: "Unbounded", sans-serif; font-weight: 600; color: var(--red); font-size: 1rem; letter-spacing: 0.08em; }
+  .step h3 { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: clamp(1.2rem,2vw,1.5rem); margin: 14px 0 10px; letter-spacing: -0.02em; }
+  .step p { color: #cdbcc2; font-size: 1rem; line-height: 1.55; }
+
+  .contact h2 { font-size: clamp(2.2rem,6vw,4rem); }
+  .contact .lead { margin-bottom: 6px; max-width: 40ch; }
+  .contact .email {
+    display: inline-block; margin-top: 18px; font-size: clamp(1.1rem,2vw,1.5rem);
+    color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 3px;
+  }
+  .contact .email:hover { color: var(--pink); border-color: var(--pink); }
+
+  .foot { background: var(--bg); border-top: 1px solid rgba(255,255,255,0.10); }
+  .foot .wrap {
+    max-width: 1180px; margin: 0 auto; padding: 36px clamp(22px,7vw,96px);
+    display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+    align-items: center; color: var(--muted); font-size: 13px;
+  }
+  .foot a { color: var(--muted); text-decoration: none; }
+  .foot a:hover { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr; gap: 8px; }
+    .nav-note { display: none; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div class="vignette"></div>
+
+  <div class="loader" id="loader"><span data-i18n="loader">выращиваем сакуру…</span></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="dot"></span>HANABI<span class="sub">studio</span></a>
+    <div class="topright">
+      <span class="nav-note" data-i18n="nav_tag"></span>
+      <div class="langsw" id="langsw">
+        <button data-lang="ru">RU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="et">ET</button>
+        <button data-lang="de">DE</button>
+      </div>
+    </div>
+  </header>
+
+  <span id="top"></span>
+
+  <!-- Narrative panels, opacity driven by scroll progress -->
+  <section class="panel left" data-panel="0">
+    <div class="inner">
+      <div class="eyebrow" data-i18n="hero_eyebrow"></div>
+      <h1 data-i18n="hero_title"></h1>
+      <p class="lead" data-i18n="hero_lead"></p>
+    </div>
+  </section>
+
+  <section class="panel right" data-panel="1">
+    <div class="inner">
+      <h2 data-i18n="caps_title"></h2>
+      <div class="caps">
+        <span data-i18n="cap1"></span>
+        <span data-i18n="cap2"></span>
+        <span data-i18n="cap3"></span>
+        <span data-i18n="cap4"></span>
+        <span data-i18n="cap5"></span>
+        <span data-i18n="cap6"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel center" data-panel="2">
+    <div class="inner">
+      <h2 data-i18n="atoms_title"></h2>
+      <p class="lead" style="margin-left:auto;margin-right:auto;" data-i18n="atoms_lead"></p>
+    </div>
+  </section>
+
+  <div class="scrollhint" id="scrollhint"><span data-i18n="scroll_hint"></span><span class="line"></span></div>
+  <div class="progress"><i id="progressbar"></i></div>
+
+  <div id="runway"></div>
+
+  <!-- ===== content sections (scroll up over the molecule) ===== -->
+  <main id="site">
+    <div class="handoff"></div>
+
+    <section class="sect" id="services">
+      <div class="wrap">
+        <h2 class="sect-head" data-i18n="services_title"></h2>
+        <div class="rows">
+          <div class="row"><h3 data-i18n="s1_t"></h3><p data-i18n="s1_d"></p></div>
+          <div class="row"><h3 data-i18n="s2_t"></h3><p data-i18n="s2_d"></p></div>
+          <div class="row"><h3 data-i18n="s3_t"></h3><p data-i18n="s3_d"></p></div>
+          <div class="row"><h3 data-i18n="s4_t"></h3><p data-i18n="s4_d"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sect" id="process">
+      <div class="wrap">
+        <h2 class="sect-head" data-i18n="process_title"></h2>
+        <div class="steps">
+          <div class="step"><span class="num">01</span><h3 data-i18n="p1_t"></h3><p data-i18n="p1_d"></p></div>
+          <div class="step"><span class="num">02</span><h3 data-i18n="p2_t"></h3><p data-i18n="p2_d"></p></div>
+          <div class="step"><span class="num">03</span><h3 data-i18n="p3_t"></h3><p data-i18n="p3_d"></p></div>
+          <div class="step"><span class="num">04</span><h3 data-i18n="p4_t"></h3><p data-i18n="p4_d"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sect contact" id="contact">
+      <div class="wrap">
+        <div class="eyebrow" data-i18n="contact_eyebrow"></div>
+        <h2 data-i18n="contact_title"></h2>
+        <p class="lead" data-i18n="contact_lead"></p>
+        <a class="cta" href="mailto:hello@hanabi.studio" data-i18n="contact_cta_label"></a><br>
+        <a class="email" href="mailto:hello@hanabi.studio">hello@hanabi.studio</a>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="wrap">
+        <span data-i18n="footer_rights"></span>
+        <a href="mailto:hello@hanabi.studio">hello@hanabi.studio</a>
+      </div>
+    </footer>
+  </main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TREE_CENTER = new THREE.Vector3(0.1, 1.2, 0);   // molecule + canopy centre
+
+/* ---------------------------------------------------------------
+   1. Build the sakura: a thick curved trunk + a dense dome canopy
+      (modelled on the reference photo — solid silhouette, volume)
+---------------------------------------------------------------- */
+// trunk and petals are separate systems: trunk is opaque & occludes (real
+// silhouette), petals are luminous, dense and bloom softly.
+const trunkPos = [], trunkColor = [], trunkScale = [];
+const petalPos = [], petalColor = [], petalScale = [];
+
+const BARK     = [0.13, 0.085, 0.075];   // dark bark
+const BARK_HI  = [0.30, 0.21, 0.17];     // lit edge of the bark
+const CANOPY = new THREE.Vector3(0.15, 1.95, 0.0);
+const RX = 2.45, RY = 1.5, RZ = 2.45;    // flattened dome, wider than tall
+
+function rand(a, b) { return a + Math.random() * (b - a); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function mixCol(c1, c2, t) { return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)]; }
+function randSphere(r) {
+  const rr = r * Math.cbrt(Math.random());
+  const z = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, s = Math.sqrt(1 - z*z);
+  return new THREE.Vector3(rr * s * Math.cos(a), rr * s * Math.sin(a), rr * z);
+}
+function randUnit() {
+  const z = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2, s = Math.sqrt(1 - z*z);
+  return new THREE.Vector3(s * Math.cos(a), s * Math.sin(a), z);
+}
+function perp(dir) {
+  const a = Math.abs(dir.x) < 0.9 ? new THREE.Vector3(1,0,0) : new THREE.Vector3(0,1,0);
+  return new THREE.Vector3().crossVectors(dir, a).normalize();
+}
+function pushTrunk(p, col, scale) {
+  trunkPos.push(p.x, p.y, p.z);
+  trunkColor.push(col[0], col[1], col[2]);
+  trunkScale.push(scale);
+}
+function pushPetal(p, col, scale) {
+  petalPos.push(p.x, p.y, p.z);
+  petalColor.push(col[0], col[1], col[2]);
+  petalScale.push(scale);
+}
+
+// solid tapering tube of bark particles along a curve
+function tube(curve, rAt, ringDensity) {
+  const pts = curve.getPoints(50);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    const dir = b.clone().sub(a).normalize();
+    const u = perp(dir), v = new THREE.Vector3().crossVectors(dir, u).normalize();
+    const len = a.distanceTo(b);
+    const rings = Math.max(1, Math.floor(len * ringDensity));
+    for (let j = 0; j < rings; j++) {
+      const t = (i + j / rings) / (pts.length - 1);
+      const c = a.clone().lerp(b, j / rings);
+      const rr = rAt(t);
+      const count = Math.max(5, Math.floor(rr * 150));
+      for (let k = 0; k < count; k++) {
+        const ang = Math.random() * Math.PI * 2;
+        const rad = rr * Math.sqrt(Math.random());
+        const p = c.clone().addScaledVector(u, Math.cos(ang) * rad).addScaledVector(v, Math.sin(ang) * rad);
+        const rim = rad / rr;                                  // 0 core .. 1 edge
+        const col = mixCol(BARK, BARK_HI, rim * rim * Math.random());
+        pushTrunk(p, col, rand(1.0, 1.7));
+      }
+    }
+  }
+}
+
+// --- main trunk: leans and curves like the photo, thick at the base ---
+const spine = new THREE.CatmullRomCurve3([
+  new THREE.Vector3( 0.00, -2.45, 0.10),
+  new THREE.Vector3(-0.22, -1.55, 0.05),
+  new THREE.Vector3(-0.05, -0.60, 0.00),
+  new THREE.Vector3( 0.30,  0.20, -0.05),
+  new THREE.Vector3( 0.16,  0.95, 0.00),
+]);
+tube(spine, (t) => lerp(0.44, 0.12, Math.pow(t, 0.85)), 26);
+
+// --- a handful of thick branches fanning up into the canopy underside ---
+const NB = 6;
+for (let i = 0; i < NB; i++) {
+  const t = lerp(0.72, 0.99, i / (NB - 1));
+  const base = spine.getPointAt(t);
+  let dir = randUnit(); dir.y = Math.abs(dir.y) * 0.6 + 0.5; dir.normalize();   // up & out
+  const len = rand(1.2, 1.9);
+  const tip = base.clone().addScaledVector(dir, len);
+  const mid = base.clone().addScaledVector(dir, len * 0.5);
+  mid.add(randSphere(0.25)); mid.y += 0.15;                                     // gentle bend
+  const br = new THREE.CatmullRomCurve3([base, mid, tip]);
+  tube(br, (s) => lerp(0.10, 0.025, s), 36);
+}
+
+// --- canopy: a dense, defined dome of blossoms ---
+const TOP    = [1.00, 0.72, 0.80];   // backlit light pink (crown)
+const MID    = [1.00, 0.40, 0.55];   // pink
+const LOW    = [0.95, 0.18, 0.36];   // deep rose underside
+const HILITE = [1.00, 0.90, 0.92];   // sparse near-white sparkle
+
+function petalAt(r) {
+  const dir = randUnit();
+  let x = dir.x * RX * r, y = dir.y * RY * r, z = dir.z * RZ * r;
+  if (y < 0) y *= 0.6;                                  // flatten the underside -> dome
+  const p = CANOPY.clone().add(new THREE.Vector3(x, y, z));
+  if (p.y < CANOPY.y - RY * 0.92) return;               // keep the bottom rounded
+  const hN = THREE.MathUtils.clamp((y / RY + 1) / 2, 0, 1);
+  let col = hN > 0.5 ? mixCol(MID, TOP, (hN - 0.5) / 0.5) : mixCol(LOW, MID, hN / 0.5);
+  if (Math.random() < 0.05) col = HILITE;
+  pushPetal(p, col, rand(0.5, 1.05));
+}
+// volume fill (outward-biased so the silhouette is defined)
+for (let i = 0; i < 19000; i++) petalAt(Math.pow(Math.random(), 0.5));
+// extra dense outer shell for a crisp edge
+for (let i = 0; i < 8000;  i++) petalAt(lerp(0.86, 1.0, Math.random()));
+
+const TRUNK_N = trunkPos.length / 3;
+const PETAL_N = petalPos.length / 3;
+
+/* ---------------------------------------------------------------
+   2. Molecular target: cubic lattice clipped to a sphere + bonds
+---------------------------------------------------------------- */
+const atoms = [];
+const SPACING = 0.62, RAD = 2.15;
+for (let x = -RAD; x <= RAD; x += SPACING)
+  for (let y = -RAD; y <= RAD; y += SPACING)
+    for (let z = -RAD; z <= RAD; z += SPACING) {
+      if (Math.sqrt(x*x + y*y + z*z) <= RAD)
+        atoms.push(new THREE.Vector3(x, y + TREE_CENTER.y, z));
+    }
+
+// bonds between lattice neighbours (~one spacing apart)
+const bondPts = [];
+for (let i = 0; i < atoms.length; i++)
+  for (let j = i + 1; j < atoms.length; j++) {
+    if (Math.abs(atoms[i].distanceTo(atoms[j]) - SPACING) < 0.05) {
+      bondPts.push(atoms[i].x, atoms[i].y, atoms[i].z, atoms[j].x, atoms[j].y, atoms[j].z);
+    }
+  }
+
+function buildMol(n, jitter) {
+  const mol = new Float32Array(n * 3);
+  const delay = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const atom = atoms[i % atoms.length];
+    const j = randSphere(jitter);
+    mol[i*3]   = atom.x + j.x;
+    mol[i*3+1] = atom.y + j.y;
+    mol[i*3+2] = atom.z + j.z;
+    delay[i] = Math.random();
+  }
+  return { mol, delay };
+}
+const trunkMol = buildMol(TRUNK_N, 0.18);   // trunk forms the inner scaffold
+const petalMol = buildMol(PETAL_N, 0.13);   // petals form glowing atom shells
+
+/* ---------------------------------------------------------------
+   3. Three.js scene + shader points + bloom
+---------------------------------------------------------------- */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setClearColor(0x050306, 1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050306, 0.05);
+const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+
+const group = new THREE.Group();
+scene.add(group);
+
+// shared uniforms (same object refs across both materials -> one update drives both)
+const uniforms = {
+  uMorph: { value: 0 },
+  uTime:  { value: 0 },
+  uSize:  { value: 26 * Math.min(window.devicePixelRatio, 2) },
+  uCenter:{ value: TREE_CENTER.clone() },
+};
+
+const VERT = /* glsl */`
+  uniform float uMorph, uTime, uSize, uBright;
+  uniform vec3 uCenter;
+  attribute vec3 aTree, aMol, aColor;
+  attribute float aScale, aDelay;
+  varying vec3 vColor;
+  varying float vAlpha;
+
+  void main() {
+    // staggered per-particle morph -> disintegration cascade
+    float lm = clamp((uMorph * 1.45) - aDelay * 0.45, 0.0, 1.0);
+    lm = lm * lm * (3.0 - 2.0 * lm);
+
+    vec3 pos = mix(aTree, aMol, lm);
+
+    // outward bulge at mid-morph: explode, then reassemble
+    vec3 outward = normalize(aTree - uCenter + 0.0001);
+    pos += outward * sin(lm * 3.14159) * 0.8;
+
+    // idle drift while it's still a tree
+    pos.x += sin(uTime * 0.5 + aTree.y * 2.0) * 0.016 * (1.0 - lm);
+    pos.z += cos(uTime * 0.4 + aTree.x * 2.0) * 0.016 * (1.0 - lm);
+
+    vColor = mix(aColor, aColor * 1.45 + 0.10, lm) * uBright;
+    vAlpha = 1.0;
+
+    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+    float size = aScale * uSize / -mv.z;
+    gl_PointSize = clamp(size, 0.5, 64.0);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const FRAG = /* glsl */`
+  uniform float uGlow;
+  varying vec3 vColor;
+  varying float vAlpha;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = length(uv);
+    float alpha = smoothstep(0.5, 0.0, d);
+    if (alpha < 0.02) discard;
+    float core = smoothstep(0.3, 0.0, d);
+    vec3 col = vColor + core * uGlow;
+    gl_FragColor = vec4(col, alpha * vAlpha);
+  }
+`;
+
+function makeSystem(pos, mol, color, scale, delay, opts) {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('aTree',  new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('aMol',   new THREE.Float32BufferAttribute(mol, 3));
+  g.setAttribute('aColor', new THREE.Float32BufferAttribute(color, 3));
+  g.setAttribute('aScale', new THREE.Float32BufferAttribute(scale, 1));
+  g.setAttribute('aDelay', new THREE.Float32BufferAttribute(delay, 1));
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeBoundingSphere();
+  const m = new THREE.ShaderMaterial({
+    uniforms: Object.assign({ uGlow: { value: opts.glow }, uBright: { value: opts.bright } }, uniforms),
+    vertexShader: VERT,
+    fragmentShader: FRAG,
+    transparent: true,
+    depthTest: true,
+    depthWrite: opts.depthWrite,
+    blending: THREE.NormalBlending,
+  });
+  const pts = new THREE.Points(g, m);
+  pts.frustumCulled = false;
+  pts.renderOrder = opts.order;
+  group.add(pts);
+  return pts;
+}
+
+// trunk: opaque, writes depth -> occludes petals behind it = real dark silhouette
+makeSystem(trunkPos, trunkMol.mol, trunkColor, trunkScale, trunkMol.delay,
+  { glow: 0.0, bright: 1.0, depthWrite: true, order: 0 });
+
+// petals: dense and luminous, drawn after; bloom carries a soft glow
+makeSystem(petalPos, petalMol.mol, petalColor, petalScale, petalMol.delay,
+  { glow: 0.22, bright: 1.0, depthWrite: false, order: 1 });
+
+// molecular bonds (fade in as it crystallises)
+const bondGeo = new THREE.BufferGeometry();
+bondGeo.setAttribute('position', new THREE.Float32BufferAttribute(bondPts, 3));
+const bondMat = new THREE.LineBasicMaterial({
+  color: 0xff3554, transparent: true, opacity: 0,
+  depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending,
+});
+const bonds = new THREE.LineSegments(bondGeo, bondMat);
+bonds.frustumCulled = false;
+group.add(bonds);
+
+/* ---- post-processing: bloom for the neon glow ---- */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.4, 0.62);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ---------------------------------------------------------------
+   4. Resize
+---------------------------------------------------------------- */
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(dpr);
+  composer.setPixelRatio(dpr);
+  renderer.setSize(w, h);
+  composer.setSize(w, h);
+  bloom.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  uniforms.uSize.value = 26 * dpr;
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------------------------------------------------------------
+   5. Scroll-driven progress (Lenis smooth scroll, graceful fallback)
+---------------------------------------------------------------- */
+let lenis = null;
+async function initSmooth() {
+  if (REDUCED) return;
+  try {
+    const { default: Lenis } = await import('https://unpkg.com/lenis@1.1.14/dist/lenis.mjs');
+    lenis = new Lenis({ lerp: 0.08, wheelMultiplier: 0.9 });
+    const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  } catch (e) { /* native scroll is fine */ }
+}
+initSmooth();
+
+// scene progress is measured over the runway only, NOT the whole document,
+// so the content sections below don't stretch the morph mapping.
+const runwayEl = document.getElementById('runway');
+function sceneEnd() {
+  return Math.max(1, runwayEl.offsetTop + runwayEl.offsetHeight - window.innerHeight);
+}
+function scrollProgress() {
+  return Math.min(1, Math.max(0, window.scrollY / sceneEnd()));
+}
+
+/* keyframe helper: value across scroll stops */
+function track(p, stops) {
+  if (p <= stops[0][0]) return stops[0][1];
+  if (p >= stops[stops.length-1][0]) return stops[stops.length-1][1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const [pa, va] = stops[i], [pb, vb] = stops[i+1];
+    if (p >= pa && p <= pb) {
+      let t = (p - pa) / (pb - pa);
+      t = t * t * (3 - 2 * t);
+      return va + (vb - va) * t;
+    }
+  }
+  return stops[stops.length-1][1];
+}
+function smoothRange(p, a, b) { // 0..1 across [a,b]
+  const t = Math.min(1, Math.max(0, (p - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+}
+
+/* panel opacity windows */
+const panels = [...document.querySelectorAll('.panel')];
+const PANEL_RANGES = [
+  [0.00, 0.13, 0.04], // hero
+  [0.22, 0.46, 0.05], // capabilities
+  [0.54, 0.78, 0.05], // atoms
+];
+function fadeWindow(p, start, end, fade) {
+  if (p < start - fade || p > end + fade) return 0;
+  if (p < start) return (p - (start - fade)) / fade;
+  if (p > end)   return 1 - (p - end) / fade;
+  return 1;
+}
+
+const progressbar = document.getElementById('progressbar');
+const scrollhint = document.getElementById('scrollhint');
+
+/* ---------------------------------------------------------------
+   6. Render loop
+---------------------------------------------------------------- */
+const _v = new THREE.Vector3();
+let last = performance.now();
+let visible = true;
+document.addEventListener('visibilitychange', () => { visible = !document.hidden; last = performance.now(); });
+
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (!visible) return;
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  const p = scrollProgress();
+
+  // morph happens in the second half of the scroll
+  uniforms.uMorph.value = smoothRange(p, 0.46, 0.92);
+  uniforms.uTime.value += dt;
+
+  // bonds fade in with the structure
+  bondMat.opacity = 0.45 * smoothRange(p, 0.6, 0.95);
+
+  // slow life rotation (skip for reduced motion)
+  if (!REDUCED) group.rotation.y += dt * 0.045;
+
+  // camera: front view of the whole tree -> orbit -> dive in -> frame the molecule
+  const theta = track(p, [[0,-0.32],[0.5,0.55],[0.85,2.2],[1,2.9]]);
+  const dist  = track(p, [[0,8.2],[0.5,7.0],[0.8,3.2],[1,7.4]]);
+  const camY  = track(p, [[0,1.3],[0.5,2.7],[0.8,1.1],[1,1.5]]);
+  const tgtY  = track(p, [[0,1.05],[0.5,1.3],[0.8,1.2],[1,1.2]]);
+
+  camera.position.set(Math.sin(theta) * dist, camY, Math.cos(theta) * dist);
+  camera.lookAt(_v.set(0, tgtY, 0));
+
+  // UI
+  progressbar.style.width = (p * 100).toFixed(2) + '%';
+  scrollhint.style.opacity = (1 - smoothRange(p, 0.0, 0.08)).toFixed(2);
+
+  panels.forEach((panel, i) => {
+    const [s, e, f] = PANEL_RANGES[i];
+    const o = fadeWindow(p, s, e, f);
+    panel.style.opacity = o.toFixed(3);
+    panel.style.transform = `translateY(${(1 - o) * 26}px)`;
+  });
+
+  // stop rendering once content fully covers the canvas (saves GPU)
+  if (window.scrollY < sceneEnd() + window.innerHeight * 1.4) composer.render();
+}
+
+requestAnimationFrame(frame);
+
+/* ---------------------------------------------------------------
+   7. i18n (RU / EN / ET / DE) + in-page navigation
+---------------------------------------------------------------- */
+const I18N = {
+  ru: {
+    nav_tag: "3D · моушн · автоматизация",
+    loader: "выращиваем сакуру…",
+    scroll_hint: "листайте вниз",
+    hero_eyebrow: "цифровая студия",
+    hero_title: 'Сайты, которые<br>невозможно<br><span class="accent">пролистать</span>',
+    hero_lead: "Мы делаем интерфейсы с 3D-сценами, живой анимацией и автоматизацией — такие, что клиент остаётся, а не уходит к конкуренту.",
+    caps_title: 'Один кадр —<br>и понятно, что<br>мы умеем <span class="accent">всё</span>',
+    cap1: "3D в браузере", cap2: "Scroll-сторителлинг", cap3: "Частицы и шейдеры",
+    cap4: "Анимации интерфейса", cap5: "Автоматизация процессов", cap6: "Боты и интеграции",
+    atoms_title: 'Разбираем сложное<br>на <span class="accent">атомы</span>',
+    atoms_lead: "…и собираем заново — точно под задачу вашего бизнеса. Без шаблонов и компромиссов.",
+    services_title: "Услуги",
+    s1_t: "Веб с 3D и анимацией", s1_d: "Лендинги и сайты с интерактивной графикой, скролл-историями и эффектами, которые удерживают внимание.",
+    s2_t: "Автоматизация и боты", s2_d: "Телеграм-боты, формы, интеграции и сценарии, которые делают рутину за вас.",
+    s3_t: "Дизайн и брендинг", s3_d: "Айдентика, UI-дизайн и системы компонентов — цельный визуальный язык продукта.",
+    s4_t: "Скорость и SEO", s4_d: "Лёгкий код, быстрая загрузка и техническая оптимизация под поиск.",
+    process_title: "Процесс",
+    p1_t: "Бриф", p1_d: "Разбираемся в задаче, аудитории и целях.",
+    p2_t: "Концепт", p2_d: "Идея, структура и визуальное направление.",
+    p3_t: "Разработка", p3_d: "Дизайн, код, 3D и анимация — до пикселя.",
+    p4_t: "Запуск", p4_d: "Тесты, оптимизация и публикация.",
+    contact_eyebrow: "давайте обсудим",
+    contact_title: 'Хотите сайт,<br>который <span class="accent">продаёт</span> за вас?',
+    contact_lead: "Расскажите о проекте — ответим в течение дня.",
+    contact_cta_label: "Обсудить проект",
+    footer_rights: "© 2026 HANABI studio. Все права защищены.",
+  },
+  en: {
+    nav_tag: "3D · motion · automation",
+    loader: "growing the sakura…",
+    scroll_hint: "scroll down",
+    hero_eyebrow: "digital studio",
+    hero_title: 'Websites you<br>simply can\'t<br><span class="accent">scroll past</span>',
+    hero_lead: "We build interfaces with 3D scenes, live animation and automation — the kind that makes clients stay instead of leaving for a competitor.",
+    caps_title: 'One frame —<br>and it\'s clear<br>we can do <span class="accent">it all</span>',
+    cap1: "3D in the browser", cap2: "Scroll storytelling", cap3: "Particles & shaders",
+    cap4: "UI animation", cap5: "Process automation", cap6: "Bots & integrations",
+    atoms_title: 'We break the complex<br>down to <span class="accent">atoms</span>',
+    atoms_lead: "…and reassemble it — precisely around your business goal. No templates, no compromises.",
+    services_title: "Services",
+    s1_t: "Web with 3D & animation", s1_d: "Landing pages and sites with interactive graphics, scroll stories and effects that hold attention.",
+    s2_t: "Automation & bots", s2_d: "Telegram bots, forms, integrations and workflows that handle the routine for you.",
+    s3_t: "Design & branding", s3_d: "Identity, UI design and component systems — one coherent visual language for your product.",
+    s4_t: "Speed & SEO", s4_d: "Lightweight code, fast loading and technical optimisation for search.",
+    process_title: "Process",
+    p1_t: "Brief", p1_d: "We dig into the task, audience and goals.",
+    p2_t: "Concept", p2_d: "Idea, structure and visual direction.",
+    p3_t: "Build", p3_d: "Design, code, 3D and animation — to the pixel.",
+    p4_t: "Launch", p4_d: "Testing, optimisation and release.",
+    contact_eyebrow: "let's talk",
+    contact_title: 'Want a site that<br><span class="accent">sells</span> for you?',
+    contact_lead: "Tell us about your project — we reply within a day.",
+    contact_cta_label: "Start a project",
+    footer_rights: "© 2026 HANABI studio. All rights reserved.",
+  },
+  et: {
+    nav_tag: "3D · liikumine · automatiseerimine",
+    loader: "kasvatame sakurat…",
+    scroll_hint: "keri alla",
+    hero_eyebrow: "digistuudio",
+    hero_title: 'Veebilehed,<br>millest ei saa<br><span class="accent">mööda kerida</span>',
+    hero_lead: "Loome liideseid 3D-stseenide, elava animatsiooni ja automatiseerimisega — selliseid, mille juurde klient jääb, mitte ei lahku konkurendi juurde.",
+    caps_title: 'Üks kaader —<br>ja on selge, et<br>oskame <span class="accent">kõike</span>',
+    cap1: "3D brauseris", cap2: "Kerimislugu", cap3: "Osakesed ja varjutajad",
+    cap4: "Liidese animatsioon", cap5: "Protsesside automatiseerimine", cap6: "Botid ja integratsioonid",
+    atoms_title: 'Lammutame keerulise<br><span class="accent">aatomiteks</span>',
+    atoms_lead: "…ja paneme uuesti kokku — täpselt teie ärieesmärgi järgi. Ilma mallide ja kompromissideta.",
+    services_title: "Teenused",
+    s1_t: "Veeb 3D ja animatsiooniga", s1_d: "Maandumislehed ja veebilehed interaktiivse graafika, kerimislugude ja efektidega, mis hoiavad tähelepanu.",
+    s2_t: "Automatiseerimine ja botid", s2_d: "Telegrami botid, vormid, integratsioonid ja töövood, mis teevad rutiini teie eest.",
+    s3_t: "Disain ja bränding", s3_d: "Identiteet, UI-disain ja komponentide süsteemid — ühtne visuaalne keel teie tootele.",
+    s4_t: "Kiirus ja SEO", s4_d: "Kerge kood, kiire laadimine ja tehniline optimeerimine otsingu jaoks.",
+    process_title: "Protsess",
+    p1_t: "Briif", p1_d: "Süveneme ülesandesse, sihtrühma ja eesmärkidesse.",
+    p2_t: "Kontseptsioon", p2_d: "Idee, struktuur ja visuaalne suund.",
+    p3_t: "Arendus", p3_d: "Disain, kood, 3D ja animatsioon — pikslini.",
+    p4_t: "Käivitus", p4_d: "Testimine, optimeerimine ja avaldamine.",
+    contact_eyebrow: "räägime",
+    contact_title: 'Soovid veebilehte, mis<br><span class="accent">müüb</span> teie eest?',
+    contact_lead: "Räägi oma projektist — vastame ühe päeva jooksul.",
+    contact_cta_label: "Alusta projekti",
+    footer_rights: "© 2026 HANABI studio. Kõik õigused kaitstud.",
+  },
+  de: {
+    nav_tag: "3D · Motion · Automatisierung",
+    loader: "wir lassen die Sakura wachsen…",
+    scroll_hint: "nach unten scrollen",
+    hero_eyebrow: "Digitalstudio",
+    hero_title: 'Websites, die<br>man nicht<br><span class="accent">wegscrollt</span>',
+    hero_lead: "Wir bauen Interfaces mit 3D-Szenen, lebendiger Animation und Automatisierung — so, dass Kunden bleiben statt zur Konkurrenz zu gehen.",
+    caps_title: 'Ein Bild —<br>und es ist klar:<br>wir können <span class="accent">alles</span>',
+    cap1: "3D im Browser", cap2: "Scroll-Storytelling", cap3: "Partikel & Shader",
+    cap4: "UI-Animation", cap5: "Prozessautomatisierung", cap6: "Bots & Integrationen",
+    atoms_title: 'Wir zerlegen Komplexes<br>in <span class="accent">Atome</span>',
+    atoms_lead: "…und setzen es neu zusammen — genau auf Ihr Geschäftsziel. Ohne Vorlagen, ohne Kompromisse.",
+    services_title: "Leistungen",
+    s1_t: "Web mit 3D & Animation", s1_d: "Landingpages und Websites mit interaktiver Grafik, Scroll-Storys und Effekten, die Aufmerksamkeit halten.",
+    s2_t: "Automatisierung & Bots", s2_d: "Telegram-Bots, Formulare, Integrationen und Workflows, die die Routine für Sie erledigen.",
+    s3_t: "Design & Branding", s3_d: "Identität, UI-Design und Komponentensysteme — eine kohärente visuelle Sprache für Ihr Produkt.",
+    s4_t: "Tempo & SEO", s4_d: "Leichter Code, schnelles Laden und technische Optimierung für die Suche.",
+    process_title: "Prozess",
+    p1_t: "Briefing", p1_d: "Wir vertiefen uns in Aufgabe, Zielgruppe und Ziele.",
+    p2_t: "Konzept", p2_d: "Idee, Struktur und visuelle Richtung.",
+    p3_t: "Entwicklung", p3_d: "Design, Code, 3D und Animation — bis zum Pixel.",
+    p4_t: "Launch", p4_d: "Tests, Optimierung und Veröffentlichung.",
+    contact_eyebrow: "sprechen wir",
+    contact_title: 'Wollen Sie eine Seite,<br>die für Sie <span class="accent">verkauft</span>?',
+    contact_lead: "Erzählen Sie uns von Ihrem Projekt — wir antworten innerhalb eines Tages.",
+    contact_cta_label: "Projekt starten",
+    footer_rights: "© 2026 HANABI studio. Alle Rechte vorbehalten.",
+  },
+};
+
+const langButtons = [...document.querySelectorAll('#langsw button')];
+function applyLang(lang) {
+  const dict = I18N[lang] || I18N.en;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const v = dict[el.getAttribute('data-i18n')];
+    if (v != null) el.innerHTML = v;
+  });
+  langButtons.forEach((b) => b.classList.toggle('active', b.dataset.lang === lang));
+  try { localStorage.setItem('lang', lang); } catch (e) {}
+}
+const SUPPORTED = ['ru', 'en', 'et', 'de'];
+let initialLang = 'en';
+try { const s = localStorage.getItem('lang'); if (s && SUPPORTED.includes(s)) initialLang = s; else {
+  const n = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  if (SUPPORTED.includes(n)) initialLang = n;
+} } catch (e) {}
+applyLang(initialLang);
+langButtons.forEach((b) => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+// smooth in-page anchors (works with or without Lenis)
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href');
+    const el = id === '#top' ? document.body : document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, { offset: -20 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// hide loader once the first frame is up
+requestAnimationFrame(() => {
+  const l = document.getElementById('loader');
+  setTimeout(() => l.classList.add('hidden'), 350);
+});
+</script>
+</body>
+</html>
