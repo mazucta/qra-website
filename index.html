@@ -750,12 +750,52 @@ function makeSystem(pos, mol, color, scale, delay, opts) {
 }
 
 // trunk: opaque, writes depth -> occludes petals behind it = real dark silhouette
-makeSystem(trunkPos, trunkMol.mol, trunkColor, trunkScale, trunkMol.delay,
+const trunkPts = makeSystem(trunkPos, trunkMol.mol, trunkColor, trunkScale, trunkMol.delay,
   { glow: 0.25, bright: 1.0, depthWrite: true, order: 0 });
+const trunkMat = trunkPts.material;   // for the breathing glow
 
 // petals: dense and luminous, drawn after; bloom carries a soft glow
 makeSystem(petalPos, petalMol.mol, petalColor, petalScale, petalMol.delay,
   { glow: 0.22, bright: 1.0, depthWrite: false, order: 1 });
+
+// --- ambient falling sakura petals (atmosphere; skipped for reduced motion) ---
+const FALL_N = REDUCED ? 0 : (COARSE ? 90 : 230);
+const fallPos = new Float32Array(FALL_N * 3);
+const fallCol = new Float32Array(FALL_N * 3);
+const fallScl = new Float32Array(FALL_N);
+const fall = [];   // per-petal motion state
+const FALL_TOP = 4.2, FALL_BOT = -2.6, FALL_X = 3.8, FALL_Z = 3.2;
+for (let i = 0; i < FALL_N; i++) {
+  const st = {
+    x: rand(-FALL_X, FALL_X), y: rand(FALL_BOT, FALL_TOP), z: rand(-FALL_Z, FALL_Z),
+    vy: rand(0.25, 0.6), sway: rand(0.2, 0.6), amp: rand(0.2, 0.5), phase: rand(0, 6.28),
+  };
+  fall.push(st);
+  fallPos[i*3] = st.x; fallPos[i*3+1] = st.y; fallPos[i*3+2] = st.z;
+  const c = petalCol(rand(CANOPY.y - RY, CANOPY.y + RY));
+  fallCol[i*3] = c[0]; fallCol[i*3+1] = c[1]; fallCol[i*3+2] = c[2];
+  fallScl[i] = rand(0.6, 1.3);
+}
+const fallGeo = new THREE.BufferGeometry();
+fallGeo.setAttribute('position', new THREE.BufferAttribute(fallPos, 3));
+fallGeo.setAttribute('aCol', new THREE.BufferAttribute(fallCol, 3));
+fallGeo.setAttribute('aS', new THREE.BufferAttribute(fallScl, 1));
+const fallMat = new THREE.ShaderMaterial({
+  uniforms: { uSize: { value: 22 * Math.min(window.devicePixelRatio, MAX_DPR) }, uOpacity: { value: 0 } },
+  transparent: true, depthTest: false, depthWrite: false, blending: THREE.NormalBlending,
+  vertexShader: /* glsl */`
+    uniform float uSize; attribute float aS; attribute vec3 aCol; varying vec3 vC;
+    void main(){ vC = aCol; vec4 mv = modelViewMatrix * vec4(position,1.0);
+      gl_PointSize = clamp(aS * uSize / -mv.z, 1.0, 36.0); gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: /* glsl */`
+    uniform float uOpacity; varying vec3 vC;
+    void main(){ vec2 uv = gl_PointCoord - 0.5; float d = length(uv);
+      float a = smoothstep(0.5, 0.0, d); if (a < 0.02) discard;
+      gl_FragColor = vec4(vC + 0.15, a * uOpacity); }`,
+});
+const fallPts = new THREE.Points(fallGeo, fallMat);
+fallPts.frustumCulled = false;
+scene.add(fallPts);   // world space, so petals fall straight regardless of group spin
 
 // molecular bonds (fade in as it crystallises)
 const bondGeo = new THREE.BufferGeometry();
@@ -789,6 +829,7 @@ function resize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   uniforms.uSize.value = 26 * dpr;
+  fallMat.uniforms.uSize.value = 22 * dpr;
 }
 window.addEventListener('resize', resize);
 resize();
@@ -881,6 +922,27 @@ function frame(now) {
 
   // bonds fade in with the structure
   bondMat.opacity = 0.45 * smoothRange(p, 0.6, 0.95);
+
+  // breathing glow on the white branches
+  trunkMat.uniforms.uGlow.value = 0.25 + 0.12 * Math.sin(uniforms.uTime.value * 1.1);
+
+  // ambient falling petals — drift + sway, fade out as the tree disintegrates
+  if (FALL_N) {
+    const fade = 1 - smoothRange(p, 0.18, 0.55);
+    fallMat.uniforms.uOpacity.value = fade;
+    if (fade > 0.001 && !REDUCED) {
+      const t = uniforms.uTime.value;
+      for (let i = 0; i < FALL_N; i++) {
+        const s = fall[i];
+        s.y -= s.vy * dt;
+        if (s.y < FALL_BOT) { s.y = FALL_TOP; s.x = rand(-FALL_X, FALL_X); s.z = rand(-FALL_Z, FALL_Z); }
+        fallPos[i*3]   = s.x + Math.sin(t * s.sway + s.phase) * s.amp;
+        fallPos[i*3+1] = s.y;
+        fallPos[i*3+2] = s.z + Math.cos(t * s.sway * 0.8 + s.phase) * s.amp * 0.5;
+      }
+      fallGeo.attributes.position.needsUpdate = true;
+    }
+  }
 
   // slow life rotation (skip for reduced motion)
   if (!REDUCED) group.rotation.y += dt * 0.045;
