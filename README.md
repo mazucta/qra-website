@@ -1,4 +1,4 @@
-# HANABI — sakura showcase
+# VELA — sakura showcase
 
 Single-file agency showcase. Scroll-driven 3D sakura (thick curved trunk, dense
 pink-to-rose dome canopy) that disintegrates into a glowing molecular lattice as
@@ -20,6 +20,6 @@ python3 -m http.server 4599
 ## Customise
 
 - Brand name / copy: edit the `I18N` dictionary in `index.html`.
-- Contact email: replace `hello@hanabi.studio`.
+- Contact email: replace `hello@vela.studio`.
 - Tree shape: `spine` control points and the `CANOPY` / `RX,RY,RZ` constants.
 - Glow: `UnrealBloomPass` params and the petal `glow` value.
