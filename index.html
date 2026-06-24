@@ -159,6 +159,32 @@
   .panel.right .lead { margin-left: auto; }
   .accent { color: var(--red); }
 
+  /* hero: text pinned higher, with a small portfolio gallery beneath it */
+  .hero-panel { align-items: flex-start; }
+  .hero-panel .inner { padding-top: clamp(96px, 15vh, 168px); }
+  .hero-work { margin-top: clamp(22px, 4vh, 40px); pointer-events: auto; }
+  .hero-work-label {
+    display: block; margin-bottom: 14px;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  }
+  .hero-gallery { display: flex; gap: 12px; flex-wrap: wrap; }
+  .work-tile {
+    position: relative; width: clamp(108px, 13vw, 140px); aspect-ratio: 4 / 3;
+    border-radius: 12px; overflow: hidden; text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 12px;
+    transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .work-tile::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 62%);
+  }
+  .work-tile > * { position: relative; z-index: 1; }
+  .work-tile:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.32); }
+  .work-tile-cat { font-size: 11px; letter-spacing: 0.04em; color: rgba(255,255,255,0.82); margin-bottom: 3px; }
+  .work-tile-name { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: 14px; color: #fff; }
+  @media (max-height: 720px) { .hero-work { display: none; } }
+
   .caps {
     display: flex;
     flex-wrap: wrap;
@@ -354,11 +380,27 @@
   <span id="top"></span>
 
   <!-- Narrative panels, opacity driven by scroll progress -->
-  <section class="panel left" data-panel="0">
+  <section class="panel left hero-panel" data-panel="0">
     <div class="inner">
-      <div class="eyebrow" data-i18n="hero_eyebrow"></div>
       <h1 data-i18n="hero_title"></h1>
       <p class="lead" data-i18n="hero_lead"></p>
+      <div class="hero-work">
+        <span class="hero-work-label" data-i18n="work_label"></span>
+        <div class="hero-gallery">
+          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
+            <span class="work-tile-cat">3D · Web</span><span class="work-tile-name">Aurora</span>
+          </a>
+          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#14141c,#3a3f55)">
+            <span class="work-tile-cat">Web App</span><span class="work-tile-name">Nord Bank</span>
+          </a>
+          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#2a0a12,#ff6f86)">
+            <span class="work-tile-cat">Branding</span><span class="work-tile-name">Atelier K</span>
+          </a>
+          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#101016,#6a2230)">
+            <span class="work-tile-cat">Bot</span><span class="work-tile-name">Botika</span>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -987,6 +1029,7 @@ const I18N = {
     nav_tag: "дизайн · разработка · автоматизация",
     loader: "выращиваем сакуру…",
     scroll_hint: "листайте вниз",
+    work_label: "Избранные работы",
     hero_eyebrow: "цифровая студия",
     hero_title: 'Сайты и продукты<br>с <span class="accent">характером</span>',
     hero_lead: "Небольшая студия дизайна и разработки. Делаем сайты, веб-приложения и автоматизацию — продуманно, аккуратно и в срок.",
@@ -1019,6 +1062,7 @@ const I18N = {
     nav_tag: "design · development · automation",
     loader: "growing the sakura…",
     scroll_hint: "scroll down",
+    work_label: "Selected work",
     hero_eyebrow: "digital studio",
     hero_title: 'Websites and products<br>with <span class="accent">character</span>',
     hero_lead: "A small design and development studio. We build websites, web apps and automation — considered, precise, on time.",
@@ -1051,6 +1095,7 @@ const I18N = {
     nav_tag: "disain · arendus · automatiseerimine",
     loader: "kasvatame sakurat…",
     scroll_hint: "keri alla",
+    work_label: "Valitud tööd",
     hero_eyebrow: "digistuudio",
     hero_title: 'Veebilehed ja tooted,<br>millel on <span class="accent">nägu</span>',
     hero_lead: "Väike disaini- ja arendusstuudio. Teeme veebilehti, veebirakendusi ja automatiseerimist — läbimõeldult, täpselt ja tähtajaks.",
@@ -1083,6 +1128,7 @@ const I18N = {
     nav_tag: "Design · Entwicklung · Automatisierung",
     loader: "wir lassen die Sakura wachsen…",
     scroll_hint: "nach unten scrollen",
+    work_label: "Ausgewählte Arbeiten",
     hero_eyebrow: "Digitalstudio",
     hero_title: 'Websites und Produkte<br>mit <span class="accent">Charakter</span>',
     hero_lead: "Ein kleines Studio für Design und Entwicklung. Wir machen Websites, Web-Apps und Automatisierung — durchdacht, präzise, termintreu.",
