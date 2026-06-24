@@ -485,8 +485,8 @@ const qn = (n) => Math.max(1, Math.round(n * QUALITY));   // quality-scaled coun
 const trunkPos = [], trunkColor = [], trunkScale = [];
 const petalPos = [], petalColor = [], petalScale = [];
 
-const BARK     = [0.13, 0.085, 0.075];   // dark bark
-const BARK_HI  = [0.30, 0.21, 0.17];     // lit edge of the bark
+const BARK     = [0.82, 0.82, 0.86];   // white particles
+const BARK_HI  = [1.00, 1.00, 1.00];   // bright white edge
 const CANOPY = new THREE.Vector3(0.15, 1.95, 0.0);
 const RX = 2.45, RY = 1.5, RZ = 2.45;    // flattened dome, wider than tall
 
@@ -751,7 +751,7 @@ function makeSystem(pos, mol, color, scale, delay, opts) {
 
 // trunk: opaque, writes depth -> occludes petals behind it = real dark silhouette
 makeSystem(trunkPos, trunkMol.mol, trunkColor, trunkScale, trunkMol.delay,
-  { glow: 0.0, bright: 1.0, depthWrite: true, order: 0 });
+  { glow: 0.25, bright: 1.0, depthWrite: true, order: 0 });
 
 // petals: dense and luminous, drawn after; bloom carries a soft glow
 makeSystem(petalPos, petalMol.mol, petalColor, petalScale, petalMol.delay,
