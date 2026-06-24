@@ -854,6 +854,13 @@ function fadeWindow(p, start, end, fade) {
 const progressbar = document.getElementById('progressbar');
 const scrollhint = document.getElementById('scrollhint');
 
+// pointer parallax — the scene gently leans toward the cursor (draws the eye)
+let pmx = 0, pmy = 0, tmx = 0, tmy = 0;
+if (!REDUCED) window.addEventListener('pointermove', (e) => {
+  tmx = (e.clientX / window.innerWidth - 0.5) * 2;
+  tmy = (e.clientY / window.innerHeight - 0.5) * 2;
+}, { passive: true });
+
 /* ---------------------------------------------------------------
    6. Render loop
 ---------------------------------------------------------------- */
@@ -885,7 +892,13 @@ function frame(now) {
   const tgtY  = track(p, [[0,1.45],[0.5,1.45],[0.8,1.2],[1,1.2]]);
 
   camera.position.set(Math.sin(theta) * dist, camY, Math.cos(theta) * dist);
-  camera.lookAt(_v.set(0, tgtY, 0));
+  // pointer parallax (gentle; calms down as the tree becomes the molecule)
+  pmx += (tmx - pmx) * Math.min(1, dt * 3);
+  pmy += (tmy - pmy) * Math.min(1, dt * 3);
+  const sway = 1 - 0.6 * smoothRange(p, 0.4, 0.9);
+  camera.position.x += pmx * 0.5 * sway;
+  camera.position.y += -pmy * 0.35 * sway;
+  camera.lookAt(_v.set(pmx * 0.25 * sway, tgtY, 0));
 
   // UI
   progressbar.style.width = (p * 100).toFixed(2) + '%';
@@ -914,7 +927,7 @@ const I18N = {
     scroll_hint: "листайте вниз",
     hero_eyebrow: "цифровая студия",
     hero_title: 'Сайты, которые<br>невозможно<br><span class="accent">пролистать</span>',
-    hero_lead: "Мы делаем интерфейсы с 3D-сценами, живой анимацией и автоматизацией — такие, что клиент остаётся, а не уходит к конкуренту.",
+    hero_lead: "3D-сцены, плавная анимация, автоматизация. Делаем сайты, от которых сложно оторвать взгляд — и которые приводят клиентов.",
     caps_title: 'Один кадр —<br>и понятно, что<br>мы умеем <span class="accent">всё</span>',
     cap1: "3D в браузере", cap2: "Scroll-сторителлинг", cap3: "Частицы и шейдеры",
     cap4: "Анимации интерфейса", cap5: "Автоматизация процессов", cap6: "Боты и интеграции",
@@ -946,7 +959,7 @@ const I18N = {
     scroll_hint: "scroll down",
     hero_eyebrow: "digital studio",
     hero_title: 'Websites you<br>simply can\'t<br><span class="accent">scroll past</span>',
-    hero_lead: "We build interfaces with 3D scenes, live animation and automation — the kind that makes clients stay instead of leaving for a competitor.",
+    hero_lead: "3D scenes, smooth animation, automation. We build sites that are hard to look away from — and that bring in clients.",
     caps_title: 'One frame —<br>and it\'s clear<br>we can do <span class="accent">it all</span>',
     cap1: "3D in the browser", cap2: "Scroll storytelling", cap3: "Particles & shaders",
     cap4: "UI animation", cap5: "Process automation", cap6: "Bots & integrations",
@@ -978,7 +991,7 @@ const I18N = {
     scroll_hint: "keri alla",
     hero_eyebrow: "digistuudio",
     hero_title: 'Veebilehed,<br>millest ei saa<br><span class="accent">mööda kerida</span>',
-    hero_lead: "Loome liideseid 3D-stseenide, elava animatsiooni ja automatiseerimisega — selliseid, mille juurde klient jääb, mitte ei lahku konkurendi juurde.",
+    hero_lead: "3D-stseenid, sujuv animatsioon, automatiseerimine. Teeme veebilehti, millelt on raske pilku ära pöörata — ja mis toovad kliente.",
     caps_title: 'Üks kaader —<br>ja on selge, et<br>oskame <span class="accent">kõike</span>',
     cap1: "3D brauseris", cap2: "Kerimislugu", cap3: "Osakesed ja varjutajad",
     cap4: "Liidese animatsioon", cap5: "Protsesside automatiseerimine", cap6: "Botid ja integratsioonid",
@@ -1010,7 +1023,7 @@ const I18N = {
     scroll_hint: "nach unten scrollen",
     hero_eyebrow: "Digitalstudio",
     hero_title: 'Websites, die<br>man nicht<br><span class="accent">wegscrollt</span>',
-    hero_lead: "Wir bauen Interfaces mit 3D-Szenen, lebendiger Animation und Automatisierung — so, dass Kunden bleiben statt zur Konkurrenz zu gehen.",
+    hero_lead: "3D-Szenen, flüssige Animation, Automatisierung. Wir bauen Websites, von denen man den Blick nicht abwenden kann — und die Kunden bringen.",
     caps_title: 'Ein Bild —<br>und es ist klar:<br>wir können <span class="accent">alles</span>',
     cap1: "3D im Browser", cap2: "Scroll-Storytelling", cap3: "Partikel & Shader",
     cap4: "UI-Animation", cap5: "Prozessautomatisierung", cap6: "Bots & Integrationen",
