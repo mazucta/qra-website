@@ -200,15 +200,14 @@
     background: #0d0810; border: 1px solid rgba(255,255,255,0.12);
     border-radius: 18px; overflow: hidden;
   }
-  .wm-preview {
-    position: relative; min-height: 320px;
-    display: flex; align-items: flex-end; padding: 24px;
+  .wm-preview { position: relative; min-height: 360px; background: #0d0810; }
+  .wm-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  .wm-open {
+    align-self: flex-start; margin-top: 4px; font-weight: 600; font-size: 14px;
+    color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 2px;
+    transition: color .25s, border-color .25s;
   }
-  .wm-preview-name {
-    font-family: "Unbounded", sans-serif; font-weight: 800;
-    font-size: clamp(1.6rem, 4vw, 2.6rem); letter-spacing: -0.03em;
-    color: #fff; opacity: 0.92; text-shadow: 0 4px 30px rgba(0,0,0,0.5);
-  }
+  .wm-open:hover { color: var(--pink); border-color: var(--pink); }
   .wm-meta { padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 14px; }
   .wm-cat { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); }
   .wm-title { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 2.2rem); letter-spacing: -0.02em; }
@@ -435,16 +434,13 @@
         <span class="hero-work-label" data-i18n="work_label"></span>
         <div class="hero-gallery" id="heroGallery">
           <button class="work-tile" type="button" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
-            <span class="work-tile-cat">3D · Web</span><span class="work-tile-name">Aurora</span>
+            <span class="work-tile-cat">Web · Beauty</span><span class="work-tile-name">Beauty-сайт</span>
           </button>
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#14141c,#3a3f55)">
-            <span class="work-tile-cat">Web App</span><span class="work-tile-name">Nord Bank</span>
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#1b1016,#8a5260)">
+            <span class="work-tile-cat">Landing</span><span class="work-tile-name">Lash · Brow</span>
           </button>
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#2a0a12,#ff6f86)">
-            <span class="work-tile-cat">Branding</span><span class="work-tile-name">Atelier K</span>
-          </button>
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#101016,#6a2230)">
-            <span class="work-tile-cat">Bot</span><span class="work-tile-name">Botika</span>
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#0d1620,#2aabee)">
+            <span class="work-tile-cat">Telegram</span><span class="work-tile-name">Booking&nbsp;Bot</span>
           </button>
         </div>
       </div>
@@ -544,11 +540,12 @@
   <dialog class="work-modal" id="workModal">
     <div class="wm-inner">
       <button class="wm-close" id="wmClose" type="button" aria-label="Close">&times;</button>
-      <div class="wm-preview" id="wmPreview"><span class="wm-preview-name" id="wmPreviewName"></span></div>
+      <div class="wm-preview" id="wmPreview"><iframe class="wm-frame" id="wmFrame" title="Project preview" loading="lazy"></iframe></div>
       <div class="wm-meta">
         <span class="wm-cat" id="wmCat"></span>
         <h3 class="wm-title" id="wmTitle"></h3>
         <p class="wm-desc" id="wmDesc"></p>
+        <a class="wm-open" id="wmOpen" href="#" target="_blank" rel="noopener" data-i18n="work_open"></a>
         <div class="wm-nav">
           <button id="wmPrev" type="button" aria-label="Previous">&larr;</button>
           <span class="wm-count" id="wmCount"></span>
@@ -1095,10 +1092,10 @@ const I18N = {
     loader: "выращиваем сакуру…",
     scroll_hint: "листайте вниз",
     work_label: "Избранные работы",
-    proj1_d: "Промо-сайт с 3D-сценой и скролл-анимацией. Интерактивная подача продукта с первого экрана.",
-    proj2_d: "Личный кабинет банка: счета, операции и аналитика. Чистый интерфейс и быстрый отклик.",
-    proj3_d: "Айдентика и сайт для дизайн-ателье. Логотип, типографика и система компонентов.",
-    proj4_d: "Телеграм-бот для записи и оплаты. Автоматизация заявок и напоминания клиентам.",
+    work_open: "Открыть пример ↗",
+    proj1_d: "Полноценный сайт бьюти-студии: услуги, прайс, галерея работ, отзывы и онлайн-запись. Адаптив и 4 языка.",
+    proj2_d: "Лендинг мастера по ресницам и бровям: акцент на услугах и записи. Лёгкий, быстрый, на нескольких языках.",
+    proj3_d: "Телеграм-бот для записи: клиент выбирает услугу и время, бот создаёт событие в Google Calendar и шлёт напоминания.",
     hero_eyebrow: "цифровая студия",
     hero_title: 'Сайты и продукты<br>с <span class="accent">характером</span>',
     hero_lead: "Небольшая студия дизайна и разработки. Делаем сайты, веб-приложения и автоматизацию — продуманно, аккуратно и в срок.",
@@ -1132,10 +1129,10 @@ const I18N = {
     loader: "growing the sakura…",
     scroll_hint: "scroll down",
     work_label: "Selected work",
-    proj1_d: "Promo site with a 3D scene and scroll animation. An interactive product story from the first screen.",
-    proj2_d: "Banking dashboard: accounts, transactions and analytics. Clean UI and a fast response.",
-    proj3_d: "Identity and website for a design atelier. Logo, typography and a component system.",
-    proj4_d: "Telegram bot for booking and payments. Automated requests and client reminders.",
+    work_open: "Open example ↗",
+    proj1_d: "A full beauty-studio website: services, pricing, gallery, reviews and online booking. Responsive, four languages.",
+    proj2_d: "A lash & brow landing page: focused on services and booking. Light, fast and multilingual.",
+    proj3_d: "A Telegram booking bot: the client picks a service and time, the bot creates a Google Calendar event and sends reminders.",
     hero_eyebrow: "digital studio",
     hero_title: 'Websites and products<br>with <span class="accent">character</span>',
     hero_lead: "A small design and development studio. We build websites, web apps and automation — considered, precise, on time.",
@@ -1169,10 +1166,10 @@ const I18N = {
     loader: "kasvatame sakurat…",
     scroll_hint: "keri alla",
     work_label: "Valitud tööd",
-    proj1_d: "Promoleht 3D-stseeni ja kerimisanimatsiooniga. Interaktiivne tootelugu juba esimesest ekraanist.",
-    proj2_d: "Panga töölaud: kontod, tehingud ja analüütika. Puhas liides ja kiire vastus.",
-    proj3_d: "Identiteet ja veebileht disainiateljeele. Logo, tüpograafia ja komponentide süsteem.",
-    proj4_d: "Telegrami bot broneerimiseks ja makseteks. Automaatsed päringud ja kliendi meeldetuletused.",
+    work_open: "Ava näide ↗",
+    proj1_d: "Täisveebileht ilustuudiole: teenused, hinnakiri, galerii, arvustused ja broneerimine. Responsiivne, neli keelt.",
+    proj2_d: "Ripsmete ja kulmude maandumisleht: rõhk teenustel ja broneerimisel. Kerge, kiire ja mitmekeelne.",
+    proj3_d: "Telegrami broneerimisbot: klient valib teenuse ja aja, bot loob Google Calendari sündmuse ja saadab meeldetuletusi.",
     hero_eyebrow: "digistuudio",
     hero_title: 'Veebilehed ja tooted,<br>millel on <span class="accent">nägu</span>',
     hero_lead: "Väike disaini- ja arendusstuudio. Teeme veebilehti, veebirakendusi ja automatiseerimist — läbimõeldult, täpselt ja tähtajaks.",
@@ -1206,10 +1203,10 @@ const I18N = {
     loader: "wir lassen die Sakura wachsen…",
     scroll_hint: "nach unten scrollen",
     work_label: "Ausgewählte Arbeiten",
-    proj1_d: "Promo-Site mit 3D-Szene und Scroll-Animation. Eine interaktive Produktstory ab dem ersten Screen.",
-    proj2_d: "Banking-Dashboard: Konten, Transaktionen und Analytik. Klares UI und schnelle Reaktion.",
-    proj3_d: "Identität und Website für ein Design-Atelier. Logo, Typografie und Komponentensystem.",
-    proj4_d: "Telegram-Bot für Buchung und Zahlung. Automatisierte Anfragen und Kunden-Erinnerungen.",
+    work_open: "Beispiel öffnen ↗",
+    proj1_d: "Komplette Beauty-Studio-Website: Leistungen, Preise, Galerie, Bewertungen und Online-Buchung. Responsiv, vier Sprachen.",
+    proj2_d: "Landingpage für Wimpern & Brauen: Fokus auf Leistungen und Buchung. Leicht, schnell und mehrsprachig.",
+    proj3_d: "Telegram-Buchungsbot: Der Kunde wählt Leistung und Zeit, der Bot erstellt ein Google-Calendar-Ereignis und sendet Erinnerungen.",
     hero_eyebrow: "Digitalstudio",
     hero_title: 'Websites und Produkte<br>mit <span class="accent">Charakter</span>',
     hero_lead: "Ein kleines Studio für Design und Entwicklung. Wir machen Websites, Web-Apps und Automatisierung — durchdacht, präzise, termintreu.",
@@ -1301,16 +1298,15 @@ if (leadForm) {
 
 // project viewer modal (opens from the hero gallery tiles)
 const PROJECTS = [
-  { name: 'Aurora',    cat: '3D · Web',  grad: 'linear-gradient(135deg,#2a0a12,#ff2742)', dkey: 'proj1_d' },
-  { name: 'Nord Bank', cat: 'Web App',   grad: 'linear-gradient(135deg,#14141c,#3a3f55)', dkey: 'proj2_d' },
-  { name: 'Atelier K', cat: 'Branding',  grad: 'linear-gradient(135deg,#2a0a12,#ff6f86)', dkey: 'proj3_d' },
-  { name: 'Botika',    cat: 'Bot',       grad: 'linear-gradient(135deg,#101016,#6a2230)', dkey: 'proj4_d' },
+  { name: 'Beauty Studio — сайт',    cat: 'Web · Beauty',           url: 'examples/beauty-website/index.html', dkey: 'proj1_d' },
+  { name: 'Lash · Brow — лендинг',   cat: 'Landing · Beauty',       url: 'examples/beauty-site/index.html',    dkey: 'proj2_d' },
+  { name: 'Booking Bot',             cat: 'Автоматизация · Telegram', url: 'examples/telegram-bot/index.html',  dkey: 'proj3_d' },
 ];
 const modal = document.getElementById('workModal');
 if (modal) {
   const els = {
-    preview: document.getElementById('wmPreview'),
-    name: document.getElementById('wmPreviewName'),
+    frame: document.getElementById('wmFrame'),
+    open: document.getElementById('wmOpen'),
     cat: document.getElementById('wmCat'),
     title: document.getElementById('wmTitle'),
     desc: document.getElementById('wmDesc'),
@@ -1320,8 +1316,8 @@ if (modal) {
   function renderWork() {
     const p = PROJECTS[wi];
     const dict = I18N[document.documentElement.lang] || I18N.en;
-    els.preview.style.background = p.grad;
-    els.name.textContent = p.name;
+    if (els.frame.getAttribute('src') !== p.url) els.frame.setAttribute('src', p.url);
+    els.open.href = p.url;
     els.cat.textContent = p.cat;
     els.title.textContent = p.name;
     els.desc.textContent = dict[p.dkey] || '';
