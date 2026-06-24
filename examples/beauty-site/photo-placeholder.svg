@@ -1,10 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 760" preserveAspectRatio="xMidYMid slice">
-  <rect width="600" height="760" fill="#1b1418"/>
-  <rect x="14" y="14" width="572" height="732" fill="none" stroke="#4a3a40" stroke-width="2" stroke-dasharray="12 9" rx="14"/>
-  <g fill="none" stroke="#9c8088" stroke-width="3">
-    <rect x="246" y="316" width="108" height="84" rx="10"/>
-    <circle cx="300" cy="360" r="22"/>
-    <path d="M270 316 l12 -18 h36 l12 18"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#f5dde4"/>
+      <stop offset="0.5" stop-color="#d49fae"/>
+      <stop offset="1" stop-color="#8c5566"/>
+    </linearGradient>
+    <radialGradient id="s" cx="0.5" cy="0.36" r="0.6">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="760" fill="url(#g)"/>
+  <rect width="600" height="760" fill="url(#s)"/>
+  <g fill="none" stroke="#5a2e3a" stroke-opacity="0.6" stroke-width="3">
+    <rect x="240" y="300" width="120" height="92" rx="12"/>
+    <circle cx="300" cy="346" r="24"/>
+    <path d="M266 300 l13 -20 h42 l13 20"/>
   </g>
-  <text x="300" y="446" fill="#cdbcc2" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="bold" text-anchor="middle">Тут будет ваше фото</text>
+  <text x="300" y="452" fill="#4a2734" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="bold" text-anchor="middle">Тут будет ваше фото</text>
 </svg>

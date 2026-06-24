@@ -176,11 +176,18 @@
     transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .3s;
     font: inherit; color: inherit; text-align: left; cursor: pointer;
   }
-  .work-tile::after {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 62%);
+  /* scaled live mini-preview of the project (400% + scale 0.25 = responsive) */
+  .tile-frame {
+    position: absolute; top: 0; left: 0; width: 400%; height: 400%; border: 0;
+    transform: scale(0.25); transform-origin: 0 0; pointer-events: none;
+    background: #0d0810; z-index: 0; opacity: 0; transition: opacity .6s ease;
   }
-  .work-tile > * { position: relative; z-index: 1; }
+  .tile-frame.ready { opacity: 1; }
+  .work-tile::after {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.12) 58%);
+  }
+  .work-tile-cat, .work-tile-name { position: relative; z-index: 2; }
   .work-tile:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.32); }
   .work-tile-cat { font-size: 11px; letter-spacing: 0.04em; color: rgba(255,255,255,0.82); margin-bottom: 3px; }
   .work-tile-name { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: 14px; color: #fff; }
@@ -433,13 +440,16 @@
       <div class="hero-work">
         <span class="hero-work-label" data-i18n="work_label"></span>
         <div class="hero-gallery" id="heroGallery">
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
+          <button class="work-tile" type="button" data-src="examples/beauty-website/index.html" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
+            <iframe class="tile-frame" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
             <span class="work-tile-cat">Web · Beauty</span><span class="work-tile-name">Beauty-сайт</span>
           </button>
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#1b1016,#8a5260)">
+          <button class="work-tile" type="button" data-src="examples/beauty-site/index.html" style="background:linear-gradient(135deg,#1b1016,#8a5260)">
+            <iframe class="tile-frame" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
             <span class="work-tile-cat">Landing</span><span class="work-tile-name">Lash · Brow</span>
           </button>
-          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#0d1620,#2aabee)">
+          <button class="work-tile" type="button" data-src="examples/telegram-bot/index.html" style="background:linear-gradient(135deg,#0d1620,#2aabee)">
+            <iframe class="tile-frame" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
             <span class="work-tile-cat">Telegram</span><span class="work-tile-name">Booking&nbsp;Bot</span>
           </button>
         </div>
@@ -1347,6 +1357,17 @@ requestAnimationFrame(() => {
   const l = document.getElementById('loader');
   setTimeout(() => l.classList.add('hidden'), 350);
 });
+
+// lazy mini-previews in the gallery tiles (deferred so they don't fight the 3D load)
+setTimeout(() => {
+  document.querySelectorAll('#heroGallery .work-tile').forEach((tile) => {
+    const frame = tile.querySelector('.tile-frame');
+    const src = tile.getAttribute('data-src');
+    if (!frame || !src) return;
+    frame.addEventListener('load', () => frame.classList.add('ready'), { once: true });
+    frame.src = src;
+  });
+}, 1600);
 </script>
 </body>
 </html>
