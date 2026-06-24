@@ -133,8 +133,8 @@
   h1 {
     font-family: "Unbounded", sans-serif;
     font-weight: 800;
-    font-size: clamp(2.6rem, 8.5vw, 5.4rem);
-    line-height: 0.96;
+    font-size: clamp(2rem, 5.5vw, 3.8rem);
+    line-height: 0.98;
     letter-spacing: -0.035em;
     text-wrap: balance;
     text-shadow: 0 4px 60px rgba(0,0,0,0.7);
@@ -174,6 +174,7 @@
     border: 1px solid rgba(255,255,255,0.12);
     display: flex; flex-direction: column; justify-content: flex-end; padding: 12px;
     transition: transform .5s cubic-bezier(.22,1,.36,1), border-color .3s;
+    font: inherit; color: inherit; text-align: left; cursor: pointer;
   }
   .work-tile::after {
     content: ""; position: absolute; inset: 0;
@@ -184,6 +185,53 @@
   .work-tile-cat { font-size: 11px; letter-spacing: 0.04em; color: rgba(255,255,255,0.82); margin-bottom: 3px; }
   .work-tile-name { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: 14px; color: #fff; }
   @media (max-height: 720px) { .hero-work { display: none; } }
+
+  /* ---- project viewer modal ---- */
+  .work-modal {
+    border: 0; padding: 0; background: transparent; color: var(--ink);
+    width: min(940px, 92vw); max-height: 90vh; border-radius: 18px;
+    margin: auto;   /* re-enable native modal centering (killed by the * margin reset) */
+  }
+  .work-modal::backdrop { background: rgba(4,2,5,0.74); backdrop-filter: blur(6px); }
+  .work-modal[open] { animation: wm-in .4s cubic-bezier(.22,1,.36,1); }
+  @keyframes wm-in { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+  .wm-inner {
+    position: relative; display: grid; grid-template-columns: 1.25fr 1fr;
+    background: #0d0810; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px; overflow: hidden;
+  }
+  .wm-preview {
+    position: relative; min-height: 320px;
+    display: flex; align-items: flex-end; padding: 24px;
+  }
+  .wm-preview-name {
+    font-family: "Unbounded", sans-serif; font-weight: 800;
+    font-size: clamp(1.6rem, 4vw, 2.6rem); letter-spacing: -0.03em;
+    color: #fff; opacity: 0.92; text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  }
+  .wm-meta { padding: clamp(24px, 3vw, 40px); display: flex; flex-direction: column; gap: 14px; }
+  .wm-cat { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); }
+  .wm-title { font-family: "Unbounded", sans-serif; font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 2.2rem); letter-spacing: -0.02em; }
+  .wm-desc { color: #cdbcc2; line-height: 1.6; font-size: 1.02rem; }
+  .wm-nav { margin-top: auto; display: flex; align-items: center; gap: 18px; padding-top: 8px; }
+  .wm-nav button {
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
+    color: var(--ink); font-size: 18px; transition: background .25s, border-color .25s;
+  }
+  .wm-nav button:hover { background: rgba(255,39,66,0.14); border-color: var(--red); }
+  .wm-count { font-size: 14px; color: var(--muted); letter-spacing: 0.04em; }
+  .wm-close {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+    background: rgba(8,4,6,0.5); border: 1px solid rgba(255,255,255,0.18);
+    color: var(--ink); font-size: 22px; line-height: 1; transition: background .25s;
+  }
+  .wm-close:hover { background: rgba(255,39,66,0.2); }
+  @media (max-width: 720px) {
+    .wm-inner { grid-template-columns: 1fr; }
+    .wm-preview { min-height: 200px; }
+  }
 
   .caps {
     display: flex;
@@ -383,22 +431,21 @@
   <section class="panel left hero-panel" data-panel="0">
     <div class="inner">
       <h1 data-i18n="hero_title"></h1>
-      <p class="lead" data-i18n="hero_lead"></p>
       <div class="hero-work">
         <span class="hero-work-label" data-i18n="work_label"></span>
-        <div class="hero-gallery">
-          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
+        <div class="hero-gallery" id="heroGallery">
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#2a0a12,#ff2742)">
             <span class="work-tile-cat">3D · Web</span><span class="work-tile-name">Aurora</span>
-          </a>
-          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#14141c,#3a3f55)">
+          </button>
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#14141c,#3a3f55)">
             <span class="work-tile-cat">Web App</span><span class="work-tile-name">Nord Bank</span>
-          </a>
-          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#2a0a12,#ff6f86)">
+          </button>
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#2a0a12,#ff6f86)">
             <span class="work-tile-cat">Branding</span><span class="work-tile-name">Atelier K</span>
-          </a>
-          <a class="work-tile" href="#contact" style="background:linear-gradient(135deg,#101016,#6a2230)">
+          </button>
+          <button class="work-tile" type="button" style="background:linear-gradient(135deg,#101016,#6a2230)">
             <span class="work-tile-cat">Bot</span><span class="work-tile-name">Botika</span>
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -492,6 +539,24 @@
       </div>
     </footer>
   </main>
+
+  <!-- project viewer (opens from the hero gallery) -->
+  <dialog class="work-modal" id="workModal">
+    <div class="wm-inner">
+      <button class="wm-close" id="wmClose" type="button" aria-label="Close">&times;</button>
+      <div class="wm-preview" id="wmPreview"><span class="wm-preview-name" id="wmPreviewName"></span></div>
+      <div class="wm-meta">
+        <span class="wm-cat" id="wmCat"></span>
+        <h3 class="wm-title" id="wmTitle"></h3>
+        <p class="wm-desc" id="wmDesc"></p>
+        <div class="wm-nav">
+          <button id="wmPrev" type="button" aria-label="Previous">&larr;</button>
+          <span class="wm-count" id="wmCount"></span>
+          <button id="wmNext" type="button" aria-label="Next">&rarr;</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
 <script type="importmap">
 {
@@ -1030,6 +1095,10 @@ const I18N = {
     loader: "выращиваем сакуру…",
     scroll_hint: "листайте вниз",
     work_label: "Избранные работы",
+    proj1_d: "Промо-сайт с 3D-сценой и скролл-анимацией. Интерактивная подача продукта с первого экрана.",
+    proj2_d: "Личный кабинет банка: счета, операции и аналитика. Чистый интерфейс и быстрый отклик.",
+    proj3_d: "Айдентика и сайт для дизайн-ателье. Логотип, типографика и система компонентов.",
+    proj4_d: "Телеграм-бот для записи и оплаты. Автоматизация заявок и напоминания клиентам.",
     hero_eyebrow: "цифровая студия",
     hero_title: 'Сайты и продукты<br>с <span class="accent">характером</span>',
     hero_lead: "Небольшая студия дизайна и разработки. Делаем сайты, веб-приложения и автоматизацию — продуманно, аккуратно и в срок.",
@@ -1063,6 +1132,10 @@ const I18N = {
     loader: "growing the sakura…",
     scroll_hint: "scroll down",
     work_label: "Selected work",
+    proj1_d: "Promo site with a 3D scene and scroll animation. An interactive product story from the first screen.",
+    proj2_d: "Banking dashboard: accounts, transactions and analytics. Clean UI and a fast response.",
+    proj3_d: "Identity and website for a design atelier. Logo, typography and a component system.",
+    proj4_d: "Telegram bot for booking and payments. Automated requests and client reminders.",
     hero_eyebrow: "digital studio",
     hero_title: 'Websites and products<br>with <span class="accent">character</span>',
     hero_lead: "A small design and development studio. We build websites, web apps and automation — considered, precise, on time.",
@@ -1096,6 +1169,10 @@ const I18N = {
     loader: "kasvatame sakurat…",
     scroll_hint: "keri alla",
     work_label: "Valitud tööd",
+    proj1_d: "Promoleht 3D-stseeni ja kerimisanimatsiooniga. Interaktiivne tootelugu juba esimesest ekraanist.",
+    proj2_d: "Panga töölaud: kontod, tehingud ja analüütika. Puhas liides ja kiire vastus.",
+    proj3_d: "Identiteet ja veebileht disainiateljeele. Logo, tüpograafia ja komponentide süsteem.",
+    proj4_d: "Telegrami bot broneerimiseks ja makseteks. Automaatsed päringud ja kliendi meeldetuletused.",
     hero_eyebrow: "digistuudio",
     hero_title: 'Veebilehed ja tooted,<br>millel on <span class="accent">nägu</span>',
     hero_lead: "Väike disaini- ja arendusstuudio. Teeme veebilehti, veebirakendusi ja automatiseerimist — läbimõeldult, täpselt ja tähtajaks.",
@@ -1129,6 +1206,10 @@ const I18N = {
     loader: "wir lassen die Sakura wachsen…",
     scroll_hint: "nach unten scrollen",
     work_label: "Ausgewählte Arbeiten",
+    proj1_d: "Promo-Site mit 3D-Szene und Scroll-Animation. Eine interaktive Produktstory ab dem ersten Screen.",
+    proj2_d: "Banking-Dashboard: Konten, Transaktionen und Analytik. Klares UI und schnelle Reaktion.",
+    proj3_d: "Identität und Website für ein Design-Atelier. Logo, Typografie und Komponentensystem.",
+    proj4_d: "Telegram-Bot für Buchung und Zahlung. Automatisierte Anfragen und Kunden-Erinnerungen.",
     hero_eyebrow: "Digitalstudio",
     hero_title: 'Websites und Produkte<br>mit <span class="accent">Charakter</span>',
     hero_lead: "Ein kleines Studio für Design und Entwicklung. Wir machen Websites, Web-Apps und Automatisierung — durchdacht, präzise, termintreu.",
@@ -1215,6 +1296,53 @@ if (leadForm) {
     const subject = encodeURIComponent('VELA — ' + name);
     const body = encodeURIComponent(name + ' <' + email + '>\n\n' + message);
     window.location.href = 'mailto:hello@vela.studio?subject=' + subject + '&body=' + body;
+  });
+}
+
+// project viewer modal (opens from the hero gallery tiles)
+const PROJECTS = [
+  { name: 'Aurora',    cat: '3D · Web',  grad: 'linear-gradient(135deg,#2a0a12,#ff2742)', dkey: 'proj1_d' },
+  { name: 'Nord Bank', cat: 'Web App',   grad: 'linear-gradient(135deg,#14141c,#3a3f55)', dkey: 'proj2_d' },
+  { name: 'Atelier K', cat: 'Branding',  grad: 'linear-gradient(135deg,#2a0a12,#ff6f86)', dkey: 'proj3_d' },
+  { name: 'Botika',    cat: 'Bot',       grad: 'linear-gradient(135deg,#101016,#6a2230)', dkey: 'proj4_d' },
+];
+const modal = document.getElementById('workModal');
+if (modal) {
+  const els = {
+    preview: document.getElementById('wmPreview'),
+    name: document.getElementById('wmPreviewName'),
+    cat: document.getElementById('wmCat'),
+    title: document.getElementById('wmTitle'),
+    desc: document.getElementById('wmDesc'),
+    count: document.getElementById('wmCount'),
+  };
+  let wi = 0;
+  function renderWork() {
+    const p = PROJECTS[wi];
+    const dict = I18N[document.documentElement.lang] || I18N.en;
+    els.preview.style.background = p.grad;
+    els.name.textContent = p.name;
+    els.cat.textContent = p.cat;
+    els.title.textContent = p.name;
+    els.desc.textContent = dict[p.dkey] || '';
+    els.count.textContent = (wi + 1) + ' / ' + PROJECTS.length;
+  }
+  function openWork(i) { wi = i; renderWork(); if (!modal.open) modal.showModal(); }
+  function step(d) { wi = (wi + d + PROJECTS.length) % PROJECTS.length; renderWork(); }
+
+  document.querySelectorAll('#heroGallery .work-tile').forEach((tile, i) => {
+    tile.addEventListener('click', () => openWork(i));
+  });
+  document.getElementById('wmPrev').addEventListener('click', () => step(-1));
+  document.getElementById('wmNext').addEventListener('click', () => step(1));
+  document.getElementById('wmClose').addEventListener('click', () => modal.close());
+  // click on the backdrop closes
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+  // arrow keys navigate while open
+  document.addEventListener('keydown', (e) => {
+    if (!modal.open) return;
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
   });
 }
 
