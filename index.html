@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>VELA — цифровая студия</title>
+<title>QRA — цифровая студия</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -419,7 +419,7 @@
   <div class="loader" id="loader"><span data-i18n="loader">выращиваем сакуру…</span></div>
 
   <header class="topbar">
-    <a class="brand" href="#top"><span class="dot"></span>VELA<span class="sub">studio</span></a>
+    <a class="brand" href="#top"><span class="dot"></span>QRA<span class="sub">studio</span></a>
     <div class="topright">
       <span class="nav-note" data-i18n="nav_tag"></span>
       <div class="langsw" id="langsw">
@@ -517,7 +517,7 @@
           <div class="eyebrow" data-i18n="contact_eyebrow"></div>
           <h2 data-i18n="contact_title"></h2>
           <p class="lead" data-i18n="contact_lead"></p>
-          <a class="email" href="mailto:hello@vela.studio">hello@vela.studio</a>
+          <a class="email" href="mailto:hello@qrastudio.com">hello@qrastudio.com</a>
         </div>
         <form class="lead-form" id="leadform" novalidate>
           <div class="field">
@@ -541,7 +541,7 @@
     <footer class="foot">
       <div class="wrap">
         <span data-i18n="footer_rights"></span>
-        <a href="mailto:hello@vela.studio">hello@vela.studio</a>
+        <a href="mailto:hello@qrastudio.com">hello@qrastudio.com</a>
       </div>
     </footer>
   </main>
@@ -1128,7 +1128,7 @@ const I18N = {
     contact_title: 'Расскажите<br>о вашей <span class="accent">задаче</span>',
     contact_lead: "Опишите задачу в двух словах — ответим в течение дня.",
     contact_cta_label: "Обсудить проект",
-    footer_rights: "© 2026 VELA studio. Все права защищены.",
+    footer_rights: "© 2026 QRA studio. Все права защищены.",
     form_name: "Имя", form_email: "Email", form_message: "Сообщение",
     form_send: "Отправить заявку",
     form_success: "Спасибо! Открываем почту…",
@@ -1165,7 +1165,7 @@ const I18N = {
     contact_title: 'Tell us about<br>your <span class="accent">project</span>',
     contact_lead: "Describe it in a few words — we reply within a day.",
     contact_cta_label: "Start a project",
-    footer_rights: "© 2026 VELA studio. All rights reserved.",
+    footer_rights: "© 2026 QRA studio. All rights reserved.",
     form_name: "Name", form_email: "Email", form_message: "Message",
     form_send: "Send request",
     form_success: "Thanks! Opening your email…",
@@ -1202,7 +1202,7 @@ const I18N = {
     contact_title: 'Rääkige oma<br><span class="accent">projektist</span>',
     contact_lead: "Kirjeldage paari sõnaga — vastame ühe päeva jooksul.",
     contact_cta_label: "Alusta projekti",
-    footer_rights: "© 2026 VELA studio. Kõik õigused kaitstud.",
+    footer_rights: "© 2026 QRA studio. Kõik õigused kaitstud.",
     form_name: "Nimi", form_email: "E-post", form_message: "Sõnum",
     form_send: "Saada päring",
     form_success: "Aitäh! Avame e-posti…",
@@ -1239,7 +1239,7 @@ const I18N = {
     contact_title: 'Erzählen Sie von<br>Ihrem <span class="accent">Projekt</span>',
     contact_lead: "Beschreiben Sie es kurz — wir antworten innerhalb eines Tages.",
     contact_cta_label: "Projekt starten",
-    footer_rights: "© 2026 VELA studio. Alle Rechte vorbehalten.",
+    footer_rights: "© 2026 QRA studio. Alle Rechte vorbehalten.",
     form_name: "Name", form_email: "E-Mail", form_message: "Nachricht",
     form_send: "Anfrage senden",
     form_success: "Danke! E-Mail wird geöffnet…",
@@ -1300,9 +1300,9 @@ if (leadForm) {
       return;
     }
     note.textContent = dict.form_success; note.className = 'form-note ok';
-    const subject = encodeURIComponent('VELA — ' + name);
+    const subject = encodeURIComponent('QRA — ' + name);
     const body = encodeURIComponent(name + ' <' + email + '>\n\n' + message);
-    window.location.href = 'mailto:hello@vela.studio?subject=' + subject + '&body=' + body;
+    window.location.href = 'mailto:hello@qrastudio.com?subject=' + subject + '&body=' + body;
   });
 }
 
