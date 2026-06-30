@@ -1,0 +1,752 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "scroll_scene_stages",
+        "label": "Scroll-Driven 3D Scene Stages",
+        "nodes": [
+          "index_stage_tree",
+          "index_stage_orbit",
+          "index_stage_disintegration",
+          "index_stage_molecule"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "index.html"
+      },
+      {
+        "id": "portfolio_demo_surfaces",
+        "label": "Portfolio Demo Surfaces in Project Viewer",
+        "nodes": [
+          "index_project_viewer_modal",
+          "beauty_website_index_demo_site",
+          "beauty_site_index_demo_site",
+          "telegram_bot_index_booking_bot"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      },
+      {
+        "id": "telegram_booking_flow",
+        "label": "Telegram Booking Flow",
+        "nodes": [
+          "telegram_bot_index_chat_mockup",
+          "telegram_bot_index_calendar_mockup",
+          "telegram_bot_index_google_calendar"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "examples/telegram-bot/index.html"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "QRA Studio Showcase (README)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_qra_studio_showcase",
+      "community": 1,
+      "norm_label": "qra studio showcase (readme)"
+    },
+    {
+      "label": "3D Sakura Scene",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_3d_sakura_scene",
+      "community": 1,
+      "norm_label": "3d sakura scene"
+    },
+    {
+      "label": "Three.js",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_three_js",
+      "community": 1,
+      "norm_label": "three.js"
+    },
+    {
+      "label": "Custom GLSL Vertex/Fragment Shaders",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_glsl_shaders",
+      "community": 1,
+      "norm_label": "custom glsl vertex/fragment shaders"
+    },
+    {
+      "label": "UnrealBloom Postprocessing",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_unreal_bloom",
+      "community": 1,
+      "norm_label": "unrealbloom postprocessing"
+    },
+    {
+      "label": "Lenis Smooth Scroll",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_lenis_smooth_scroll",
+      "community": 2,
+      "norm_label": "lenis smooth scroll"
+    },
+    {
+      "label": "Scroll-Driven Scene Timeline (tree to molecule)",
+      "file_type": "rationale",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_scroll_driven_timeline",
+      "community": 2,
+      "norm_label": "scroll-driven scene timeline (tree to molecule)"
+    },
+    {
+      "label": "Stage: Sakura Tree",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_stage_tree",
+      "community": 2,
+      "norm_label": "stage: sakura tree"
+    },
+    {
+      "label": "Stage: Orbit",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_stage_orbit",
+      "community": 2,
+      "norm_label": "stage: orbit"
+    },
+    {
+      "label": "Stage: Disintegration",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_stage_disintegration",
+      "community": 2,
+      "norm_label": "stage: disintegration"
+    },
+    {
+      "label": "Stage: Molecular Lattice",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_stage_molecule",
+      "community": 2,
+      "norm_label": "stage: molecular lattice"
+    },
+    {
+      "label": "i18n System (RU/EN/ET/DE)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_i18n_system",
+      "community": 0,
+      "norm_label": "i18n system (ru/en/et/de)"
+    },
+    {
+      "label": "Hero Portfolio Gallery",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_hero_gallery",
+      "community": 0,
+      "norm_label": "hero portfolio gallery"
+    },
+    {
+      "label": "Live Iframe Mini-Previews",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_gallery_iframe_preview",
+      "community": 0,
+      "norm_label": "live iframe mini-previews"
+    },
+    {
+      "label": "Project Viewer Modal (native dialog)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_project_viewer_modal",
+      "community": 0,
+      "norm_label": "project viewer modal (native dialog)"
+    },
+    {
+      "label": "Cursor Parallax",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_cursor_parallax",
+      "community": 4,
+      "norm_label": "cursor parallax"
+    },
+    {
+      "label": "Ambient Falling Petals",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_ambient_petals",
+      "community": 1,
+      "norm_label": "ambient falling petals"
+    },
+    {
+      "label": "Auto Quality Scaling",
+      "file_type": "rationale",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_auto_quality_scaling",
+      "community": 1,
+      "norm_label": "auto quality scaling"
+    },
+    {
+      "label": "Contact Lead Form",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_contact_lead_form",
+      "community": 0,
+      "norm_label": "contact lead form"
+    },
+    {
+      "label": "Beauty Website Demo Site (Lash/Brow/PMU Studio)",
+      "file_type": "code",
+      "source_file": "examples/beauty-website/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "beauty_website_index_demo_site",
+      "community": 0,
+      "norm_label": "beauty website demo site (lash/brow/pmu studio)"
+    },
+    {
+      "label": "Beauty Site Demo (Lash/Brow Landing)",
+      "file_type": "code",
+      "source_file": "examples/beauty-site/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "beauty_site_index_demo_site",
+      "community": 0,
+      "norm_label": "beauty site demo (lash/brow landing)"
+    },
+    {
+      "label": "Telegram Booking Bot Demo",
+      "file_type": "concept",
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "telegram_bot_index_booking_bot",
+      "community": 3,
+      "norm_label": "telegram booking bot demo"
+    },
+    {
+      "label": "Telegram Chat Mockup",
+      "file_type": "concept",
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "telegram_bot_index_chat_mockup",
+      "community": 3,
+      "norm_label": "telegram chat mockup"
+    },
+    {
+      "label": "Calendar + Event Mockup",
+      "file_type": "concept",
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "telegram_bot_index_calendar_mockup",
+      "community": 3,
+      "norm_label": "calendar + event mockup"
+    },
+    {
+      "label": "Google Calendar Integration",
+      "file_type": "concept",
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "telegram_bot_index_google_calendar",
+      "community": 3,
+      "norm_label": "google calendar integration"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_qra_studio_showcase",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/beauty-site/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "beauty_site_index_demo_site",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/beauty-website/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "beauty_website_index_demo_site",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_3d_sakura_scene",
+      "target": "index_glsl_shaders"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_3d_sakura_scene",
+      "target": "index_three_js"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_3d_sakura_scene",
+      "target": "index_unreal_bloom"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_auto_quality_scaling",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "telegram_bot_index_booking_bot",
+      "target": "index_3d_sakura_scene"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_glsl_shaders",
+      "target": "index_three_js"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_unreal_bloom",
+      "target": "index_three_js"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_ambient_petals",
+      "target": "index_glsl_shaders"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_lenis_smooth_scroll"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_stage_disintegration"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_stage_molecule"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_stage_orbit"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_scroll_driven_timeline",
+      "target": "index_stage_tree"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_stage_tree",
+      "target": "index_stage_orbit"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_stage_orbit",
+      "target": "index_stage_disintegration"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_stage_disintegration",
+      "target": "index_stage_molecule"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_i18n_system",
+      "target": "index_contact_lead_form"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_i18n_system",
+      "target": "index_hero_gallery"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_hero_gallery",
+      "target": "index_gallery_iframe_preview"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_hero_gallery",
+      "target": "index_project_viewer_modal"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_gallery_iframe_preview",
+      "target": "beauty_website_index_demo_site"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_project_viewer_modal",
+      "target": "beauty_site_index_demo_site"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_project_viewer_modal",
+      "target": "beauty_website_index_demo_site"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_project_viewer_modal",
+      "target": "telegram_bot_index_booking_bot"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "examples/beauty-site/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "beauty_site_index_demo_site",
+      "target": "beauty_website_index_demo_site"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "telegram_bot_index_booking_bot",
+      "target": "telegram_bot_index_calendar_mockup"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "telegram_bot_index_booking_bot",
+      "target": "telegram_bot_index_chat_mockup"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "telegram_bot_index_booking_bot",
+      "target": "telegram_bot_index_google_calendar"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "telegram_bot_index_calendar_mockup",
+      "target": "telegram_bot_index_google_calendar"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "scroll_scene_stages",
+      "label": "Scroll-Driven 3D Scene Stages",
+      "nodes": [
+        "index_stage_tree",
+        "index_stage_orbit",
+        "index_stage_disintegration",
+        "index_stage_molecule"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html"
+    },
+    {
+      "id": "portfolio_demo_surfaces",
+      "label": "Portfolio Demo Surfaces in Project Viewer",
+      "nodes": [
+        "index_project_viewer_modal",
+        "beauty_website_index_demo_site",
+        "beauty_site_index_demo_site",
+        "telegram_bot_index_booking_bot"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    },
+    {
+      "id": "telegram_booking_flow",
+      "label": "Telegram Booking Flow",
+      "nodes": [
+        "telegram_bot_index_chat_mockup",
+        "telegram_bot_index_calendar_mockup",
+        "telegram_bot_index_google_calendar"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "examples/telegram-bot/index.html"
+    }
+  ],
+  "built_at_commit": "7429547de746cd1c58e82dc94642a38a48445603"
+}

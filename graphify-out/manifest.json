@@ -1,0 +1,122 @@
+{
+  "examples/beauty-site/assets/index-NagyjGb4.js": {
+    "mtime": 1782847082.8575845,
+    "ast_hash": "5984667e4cbb40c2bfb5e768fc4cb5f5",
+    "semantic_hash": "5984667e4cbb40c2bfb5e768fc4cb5f5"
+  },
+  "examples/beauty-website/assets/index-B7F2bWWG.js": {
+    "mtime": 1782857909.9097686,
+    "ast_hash": "b1ed1dc53709fd46d655c20f7f5ff8ee",
+    "semantic_hash": "b1ed1dc53709fd46d655c20f7f5ff8ee"
+  },
+  "README.md": {
+    "mtime": 1782847082.8558123,
+    "ast_hash": "f3c7f94b640896bb1a0762fd29311526",
+    "semantic_hash": "f3c7f94b640896bb1a0762fd29311526"
+  },
+  "examples/beauty-site/index.html": {
+    "mtime": 1782847082.859859,
+    "ast_hash": "169a9c3837a1e46359be32be639c4a3f",
+    "semantic_hash": "169a9c3837a1e46359be32be639c4a3f"
+  },
+  "examples/beauty-website/index.html": {
+    "mtime": 1782847082.8652961,
+    "ast_hash": "9a223b8bb5294736bf0fd4a7bd8815e8",
+    "semantic_hash": "9a223b8bb5294736bf0fd4a7bd8815e8"
+  },
+  "examples/telegram-bot/index.html": {
+    "mtime": 1782847082.8716986,
+    "ast_hash": "8a52ad419f2c45de863858dae3e1f12b",
+    "semantic_hash": "8a52ad419f2c45de863858dae3e1f12b"
+  },
+  "index.html": {
+    "mtime": 1782858111.7747805,
+    "ast_hash": "39a8d1656cc0a188b1556cf3d6e2ef5e",
+    "semantic_hash": "39a8d1656cc0a188b1556cf3d6e2ef5e"
+  },
+  "examples/beauty-site/favicon.svg": {
+    "mtime": 1782847082.8577185,
+    "ast_hash": "a3ce7fb295797f71d941f2b378445ef1",
+    "semantic_hash": "a3ce7fb295797f71d941f2b378445ef1"
+  },
+  "examples/beauty-site/gallery-1.jpg": {
+    "mtime": 1782847082.8581018,
+    "ast_hash": "606fe5cb22ac93a705eace61fa2cebd9",
+    "semantic_hash": "606fe5cb22ac93a705eace61fa2cebd9"
+  },
+  "examples/beauty-site/gallery-2.jpg": {
+    "mtime": 1782847082.8586972,
+    "ast_hash": "ba74cb45a33aafa26e743d0f0cbef91b",
+    "semantic_hash": "ba74cb45a33aafa26e743d0f0cbef91b"
+  },
+  "examples/beauty-site/gallery-3.jpg": {
+    "mtime": 1782847082.8590531,
+    "ast_hash": "8b8b49a1d616cfde7cb913142b83ddeb",
+    "semantic_hash": "8b8b49a1d616cfde7cb913142b83ddeb"
+  },
+  "examples/beauty-site/gallery-4.jpg": {
+    "mtime": 1782847082.8594098,
+    "ast_hash": "9d7808eeb023d53070d29bb312e32a3d",
+    "semantic_hash": "9d7808eeb023d53070d29bb312e32a3d"
+  },
+  "examples/beauty-site/gallery-5.jpg": {
+    "mtime": 1782847082.8597383,
+    "ast_hash": "87b5686b184717ab97bc1fc276afcdf6",
+    "semantic_hash": "87b5686b184717ab97bc1fc276afcdf6"
+  },
+  "examples/beauty-site/photo-placeholder.svg": {
+    "mtime": 1782847082.859948,
+    "ast_hash": "59cfa7c081dc2bdfa753a442254072af",
+    "semantic_hash": "59cfa7c081dc2bdfa753a442254072af"
+  },
+  "examples/beauty-website/favicon.svg": {
+    "mtime": 1782847082.8605912,
+    "ast_hash": "09e85bfee73d47f9fb2e7762d2771fcb",
+    "semantic_hash": "09e85bfee73d47f9fb2e7762d2771fcb"
+  },
+  "examples/beauty-website/gallery1.jpg": {
+    "mtime": 1782847082.860946,
+    "ast_hash": "00cfca8efef3f655fbe9a58590fd3530",
+    "semantic_hash": "00cfca8efef3f655fbe9a58590fd3530"
+  },
+  "examples/beauty-website/gallery2.jpg": {
+    "mtime": 1782847082.8613186,
+    "ast_hash": "aade9a20f4f8fb287dbe3b607e7e9092",
+    "semantic_hash": "aade9a20f4f8fb287dbe3b607e7e9092"
+  },
+  "examples/beauty-website/gallery3.png": {
+    "mtime": 1782847082.8617227,
+    "ast_hash": "e44e959e3a1576f9e4620b6f4af09966",
+    "semantic_hash": "e44e959e3a1576f9e4620b6f4af09966"
+  },
+  "examples/beauty-website/gallery4.jpg": {
+    "mtime": 1782847082.862085,
+    "ast_hash": "8b4578ca7def53036358204826db9875",
+    "semantic_hash": "8b4578ca7def53036358204826db9875"
+  },
+  "examples/beauty-website/gallery5.png": {
+    "mtime": 1782847082.8627777,
+    "ast_hash": "d3d56ab171ba23cafcb7e84a942ab657",
+    "semantic_hash": "d3d56ab171ba23cafcb7e84a942ab657"
+  },
+  "examples/beauty-website/gallery6.jpg": {
+    "mtime": 1782847082.8639603,
+    "ast_hash": "6da05df61cba82825082032d300cad8e",
+    "semantic_hash": "6da05df61cba82825082032d300cad8e"
+  },
+  "examples/beauty-website/hero-bg.svg": {
+    "mtime": 1782847128.1168356,
+    "ast_hash": "b6229967372e473079438136d6e7f144",
+    "semantic_hash": "b6229967372e473079438136d6e7f144"
+  },
+  "examples/beauty-website/photo-placeholder.svg": {
+    "mtime": 1782847082.865416,
+    "ast_hash": "59cfa7c081dc2bdfa753a442254072af",
+    "semantic_hash": "59cfa7c081dc2bdfa753a442254072af"
+  },
+  "examples/beauty-website/review-avatar.svg": {
+    "mtime": 1782857909.9098873,
+    "ast_hash": "4c39d489a72bc3d985edc72feac312c5",
+    "semantic_hash": "4c39d489a72bc3d985edc72feac312c5"
+  }
+}
